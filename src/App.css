@@ -151,3 +151,38 @@ a:hover {
   font-size: 0.9rem;
   color: #555; /* 日付の色を薄くして控えめに */
 }
+
+/* タグのスタイリング - 各記事に付けるタグ */
+.tags a {
+  color: #007bff !important; /* タグの色を青色に設定 */
+  margin-right: 5px; /* タグ間に少し余白を追加 */
+  text-decoration: none; /* 下線を削除 */
+}
+
+.tags a:hover {
+  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* タグのスタイリング - タグごとの記事一覧ページ */
+.tag-grid .card .tags a {
+  color: #007bff !important; /* タグの色を青色に設定 */
+  text-decoration: none; /* 下線を削除 */
+}
+
+.tag-grid .card .tags a:hover {
+  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* タグごとの記事一覧ページでのタグリンクのスタイリング */
+h2 a {
+  color: #007bff !important; /* タグの色を青色に設定 */
+  text-decoration: none; /* 下線を削除 */
+}
+
+h2 a:hover {
+  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+

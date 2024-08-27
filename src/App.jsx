@@ -245,7 +245,7 @@ function App() {
         )}
 
         {pageID === 'tag' && (
-          <div>
+          <div className="tag">
             <h2>タグ：<a>#{tag}</a></h2>
             <div className="tag-grid">
               {pages.pageList && pages.pageList.map((id) => (
@@ -267,9 +267,9 @@ function App() {
         {pageID === 'tagList' && (
           <div>
             <h2>タグ一覧</h2>
-            <div>
+            <div className="tag-list">
               {tags.map((tag) => (
-                <a key={tag.data} href={`/?pageID=tag&tag=${tag.data}`}>#{tag.data} </a>
+                <a key={tag.data} href={`/?pageID=tag&tag=${tag.data}`}>#{tag.data}</a>
               ))}
             </div>
           </div>
