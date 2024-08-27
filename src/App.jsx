@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { TwitterTimelineEmbed } from 'react-twitter-embed'; // パッケージをインポート
+import { TwitterTimelineEmbed } from 'react-twitter-embed'; 
 import './App.css';
 import logo from './assets/takoyaki3.png';
+import { marked } from 'marked';
+import highlight from 'highlight.js';
+import 'highlight.js/styles/github.css';
 
 function App() {
   const [count, setCount] = useState(0);
   const [pageID, setPageID] = useState(null);
+  const [type, setType] = useState(null);
+  const [tag, setTag] = useState(null);
+  const [pages, setPages] = useState({});
+  const [page, setPage] = useState(null);
+  const [pageHTML, setPageHTML] = useState('');
   const [recentPosts, setRecentPosts] = useState([]);
-  const [sns, setSns] = useState([
+  const [tags, setTags] = useState([]);
+  const sns = [
     {
       text: 'GitHub',
       icon: '/assets/github-mark.png',
@@ -33,38 +42,80 @@ function App() {
       icon: '/assets/mail.png',
       href: 'mailto:mail@takoyaki3.com',
     },
-  ]);
+  ];
 
   useEffect(() => {
     document.title = 'たこやきさんのつぶやき';
     const urlParams = new URLSearchParams(window.location.search);
-    setPageID(urlParams.get('pageID') || 'top');
-    fetchRecentPosts();
+    const pageID = urlParams.get('pageID') || 'top';
+    const type = urlParams.get('type');
+    const tag = urlParams.get('tag');
+    setPageID(pageID);
+    setType(type);
+    setTag(tag);
+    fetchContent(pageID, type, tag);
   }, []);
 
-  const fetchRecentPosts = async () => {
-    // Fetch recent posts data and set to state (assuming an API or data source)
-    const posts = [
-      {
-        id: '1',
-        title: 'Recent Post 1',
-        created: '2023-08-01',
-        updated: '2023-08-15',
-      },
-      {
-        id: '2',
-        title: 'Recent Post 2',
-        created: '2023-07-20',
-        updated: '2023-08-10',
-      },
-      {
-        id: '3',
-        title: 'Recent Post 3',
-        created: '2023-07-05',
-        updated: '2023-08-05',
-      },
-    ];
-    setRecentPosts(posts);
+  const fetchContent = async (pageID, type, tag) => {
+    try {
+      const idListResponse = await fetch(
+        'https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-key'
+      );
+      const ids = await idListResponse.json();
+      const pagesData = {};
+      const recentPostsData = [];
+
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i].data;
+        const postResponse = await fetch(
+          `https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-article-${id}`
+        );
+        const postData = await postResponse.json();
+        const postJSON = JSON.parse(postData[0].data);
+        pagesData[postJSON.id] = postJSON;
+        if (i < 3) {
+          recentPostsData.push(postJSON);
+        }
+      }
+
+      setPages(pagesData);
+      setRecentPosts(recentPostsData);
+
+      const tagsResponse = await fetch(
+        'https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-tags'
+      );
+      const tagsData = await tagsResponse.json();
+      setTags(tagsData);
+
+      if (tag) {
+        const tagResponse = await fetch(
+          `https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-tag-${tag}`
+        );
+        const tagIds = await tagResponse.json();
+        const pageList = tagIds.map((e) => e.data);
+        setPages((prevPages) => ({
+          ...prevPages,
+          pageList,
+        }));
+      }
+
+      if (type && pageID && pagesData[pageID]) {
+        setPage(pagesData[pageID]);
+        let content = pagesData[pageID].file;
+        if (type === 'md') {
+          content = marked(content, {
+            highlight: (code, lang) => {
+              return (
+                '<code class="hljs">' + highlight.highlightAuto(code, [lang]).value + '</code>'
+              );
+            },
+          });
+        }
+        setPageHTML(content);
+      }
+    } catch (error) {
+      console.error('Error fetching content:', error);
+    }
   };
 
   return (
@@ -155,6 +206,57 @@ function App() {
                 screenName="takoyaki3333333"
                 options={{ tweetLimit: '10' }}
               />
+            </div>
+          </div>
+        )}
+
+        {pageID !== 'top' && page && (
+          <div>
+            <div className="text-right">
+              <p>
+                作成日時：{page.created}
+                <br />
+                更新日時：{page.updated}
+              </p>
+            </div>
+            <div className="card">
+              <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
+            </div>
+            <div className="tags">
+              {page.tags.map((tag) => (
+                <a key={tag} href={`/?pageID=tag&tag=${tag}`}>#{tag} </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {pageID === 'tag' && (
+          <div>
+            <h2>タグ：<a>#{tag}</a></h2>
+            <div>
+              {pages.pageList && pages.pageList.map((id) => (
+                <a key={id} href={`/?pageID=${pages[id].id}&type=${pages[id].type}`}>
+                  <div className="card">
+                    <h3>{pages[id].title}</h3>
+                    <p style={{ textAlign: 'right' }}>
+                      作成日時：{pages[id].created}
+                      <br />
+                      更新日時：{pages[id].updated}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {pageID === 'tagList' && (
+          <div>
+            <h2>タグ一覧</h2>
+            <div>
+              {tags.map((tag) => (
+                <a key={tag.data} href={`/?pageID=tag&tag=${tag.data}`}>#{tag.data} </a>
+              ))}
             </div>
           </div>
         )}

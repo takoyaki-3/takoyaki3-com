@@ -128,7 +128,7 @@ a:hover {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.2s ease-in-out;
-  min-height: 150px; /* カードの最小高さを設定 */
+  min-height: 120px; /* カードの最小高さを設定 */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -142,4 +142,22 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.recent-posts .card {
+  min-height: 80px; /* Recent Postsカードの最小高さを設定 */
+  padding: 30px; /* パディングを小さく設定 */
+  justify-content: flex-start; /* コンテンツを上部に揃える */
+}
+
+.recent-posts .card h3 {
+  text-align: left; /* タイトルを左詰めに設定 */
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.recent-posts .card p {
+  text-align: right; /* 日付を右詰めに設定 */
+  margin-top: auto;
+  font-size: 0.9rem;
 }
