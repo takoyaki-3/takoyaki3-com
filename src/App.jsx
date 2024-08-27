@@ -131,8 +131,12 @@ function App() {
   return (
     <>
       <header className="app-header">
-        <img src={logo} className="header-logo" alt="App Logo" />
-        <h2>たこやきさんのつぶやき</h2>
+        <a href="/?pageID=top">
+          <img src={logo} className="header-logo" alt="App Logo" />
+        </a>
+        <a href="/?pageID=top" style={{ textDecoration: 'none', color: 'white' }}>
+          <h2 style={{color: 'white'}}>たこやきさんのつぶやき</h2>
+        </a>
       </header>
       <div className="app-content">
         {pageID === 'top' && (
