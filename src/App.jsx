@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TwitterTimelineEmbed } from 'react-twitter-embed'; 
+import { Timeline } from 'react-twitter-widgets';
 import './App.css';
 import logo from './assets/takoyaki3.png';
 import { marked } from 'marked';
@@ -218,13 +218,13 @@ function App() {
                 </a>
               ))}
             </div>
-
-            <h2>Twitter</h2>
-            <div className="twitter-embed">
-              <TwitterTimelineEmbed
-                sourceType="profile"
-                screenName="takoyaki3333333"
-                options={{ tweetLimit: '10' }}
+            <div>
+              <h2>Twitter Timeline</h2>
+              <Timeline
+                dataSource={{
+                  sourceType: 'profile',
+                  screenName: 'takoyaki3333333'
+                }}
               />
             </div>
           </div>
