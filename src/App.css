@@ -44,7 +44,8 @@ a:hover {
   align-items: center;
   justify-content: flex-start;
   padding-left: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 影を維持 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), /* 軽い影 */
+              0 8px 16px rgba(0, 0, 0, 0.1); /* さらに深い影で立体感 */
   z-index: 1000;
 }
 
