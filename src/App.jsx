@@ -243,7 +243,7 @@ function App() {
         {pageID === 'tag' && (
           <div>
             <h2>タグ：<a>#{tag}</a></h2>
-            <div>
+            <div className="tag-grid">
               {pages.pageList && pages.pageList.map((id) => (
                 <a key={id} href={`/?pageID=${pages[id].id}&type=${pages[id].type}`}>
                   <div className="card">

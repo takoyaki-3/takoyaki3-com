@@ -67,26 +67,27 @@ a:hover {
   gap: 15px; /* アイコン間隔を広げる */
 }
 
-.menu-grid {
+/* グリッドレイアウト */
+.menu-grid, .tag-grid {
   display: grid;
-  gap: 20px;
+  gap: 20px; /* カード間の幅を持たせる */
 }
 
 @media (min-width: 1200px) {
-  .menu-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .menu-grid, .tag-grid {
+    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
-  .menu-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .menu-grid, .tag-grid {
+    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
   }
 }
 
 @media (max-width: 767px) {
-  .menu-grid {
-    grid-template-columns: 1fr;
+  .menu-grid, .tag-grid {
+    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
   }
 }
 
@@ -108,6 +109,7 @@ a:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* ホバー時の影を強調 */
 }
 
+/* Recent Posts のカード */
 .recent-posts {
   display: flex;
   flex-direction: column;
@@ -134,4 +136,17 @@ a:hover {
   color: #555; /* 日付の色を薄くして控えめに */
 }
 
-/* フッターやその他のセクションも追加する場合はここに記載 */
+/* タグ指定時のカード */
+.tag-grid .card h3 {
+  text-align: left;
+  margin: 0 0 10px; /* 下に少し余白を追加 */
+  font-size: 1.2rem;
+  color: #000; /* タイトルの色を黒に設定 */
+}
+
+.tag-grid .card p {
+  text-align: right;
+  margin-top: auto;
+  font-size: 0.9rem;
+  color: #555; /* 日付の色を薄くして控えめに */
+}
