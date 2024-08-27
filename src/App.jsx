@@ -150,7 +150,7 @@ function App() {
             <div className="centered-content">
               <img
                 alt="Vuetify Logo"
-                src="https://qiita-image-store.s3.amazonaws.com/0/224979/profile-images/1514873692"
+                src="/assets/takoyaki3.png"
                 className="shrink mr-2"
               />
             </div>
