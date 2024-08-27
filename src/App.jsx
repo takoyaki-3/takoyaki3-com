@@ -56,6 +56,14 @@ function App() {
     fetchContent(pageID, type, tag);
   }, []);
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const fetchContent = async (pageID, type, tag) => {
     try {
       const idListResponse = await fetch(
@@ -72,6 +80,8 @@ function App() {
         );
         const postData = await postResponse.json();
         const postJSON = JSON.parse(postData[0].data);
+        postJSON.created = formatDate(postJSON.created); // 日付をフォーマット
+        postJSON.updated = formatDate(postJSON.updated); // 日付をフォーマット
         pagesData[postJSON.id] = postJSON;
         if (i < 3) {
           recentPostsData.push(postJSON);

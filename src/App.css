@@ -1,101 +1,70 @@
+/* 全体の設定 */
 body {
-  background-color: #eee; /* ページ全体の背景色を#eeeに設定 */
-  color: #000; /* 文字の色を黒に設定 */
+  background-color: #f5f5f5; /* 背景色をより明るいグレーに変更 */
+  color: #333; /* テキスト色を濃いグレーに変更 */
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif; /* モダンなフォントを使用 */
+  line-height: 1.6; /* 読みやすさを向上 */
 }
 
 #root {
-  max-width: 1280px;
+  max-width: 1200px; /* 最大幅を1200pxに設定 */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: #eee; /* ルート要素の背景色を#eeeに設定 */
-  color: #000; /* 文字の色を黒に設定 */
+  background-color: #f5f5f5; /* 背景色を一致させる */
+  color: #333; /* 文字の色を濃いグレーに設定 */
 }
 
 a {
-  color: #000 !important; /* リンクの文字色を黒に強制設定 */
-  text-decoration: none; /* 下線を削除 */
+  color: #000 !important; /* リンク色を黒に戻す */
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 a:visited {
-  color: #000 !important; /* 訪問済みリンクの文字色を黒に設定 */
+  color: #000 !important; /* 訪問済みリンクの色も黒に設定 */
 }
 
 a:hover {
-  text-decoration: underline; /* ホバー時に下線を表示 */
+  text-decoration: underline;
+  color: #555 !important; /* ホバー時に少し濃いグレー */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
+/* ヘッダー */
 .app-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 80px;
-  background-color: #009688; /* ヘッダーの背景色 */
+  background-color: #00695c; /* 深緑色に変更 */
   color: white;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* 左寄せに変更 */
-  padding-left: 20px; /* 左端から少し余白を持たせる */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 影を追加して立体感を持たせる */
-  z-index: 1000; /* 他の要素より前面に表示するための設定 */
-}
-
-.app-content {
-  padding-top: 150px; /* ヘッダーの高さ分だけ余白を追加 */
-  color: #000; /* コンテンツ部分の文字色を黒に設定 */
+  justify-content: flex-start;
+  padding-left: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 影を維持 */
+  z-index: 1000;
 }
 
 .header-logo {
-  height: 50px; /* ロゴの高さを設定 */
-  margin-right: 20px; /* ロゴとテキストの間に余白を追加 */
+  height: 50px;
+  margin-right: 20px;
 }
 
+/* メインコンテンツ */
+.app-content {
+  padding-top: 100px; /* ヘッダーの高さを調整 */
+  color: #333;
+}
+
+/* 中央揃えのコンテンツ */
 .centered-content {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-  gap: 10px; /* アイコン同士の間隔を広げる */
+  gap: 15px; /* アイコン間隔を広げる */
 }
 
 .menu-grid {
@@ -105,37 +74,38 @@ a:hover {
 
 @media (min-width: 1200px) {
   .menu-grid {
-    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .menu-grid {
-    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 767px) {
   .menu-grid {
-    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
+    grid-template-columns: 1fr;
   }
 }
 
+/* カード */
 .card {
   padding: 20px;
   background: white;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease-in-out;
-  min-height: 120px; /* カードの最小高さを設定 */
+  border-radius: 10px; /* 角を少し丸める */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 影を強化 */
+  transition: box-shadow 0.3s ease;
+  min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* ホバー時の影を強調 */
 }
 
 .recent-posts {
@@ -145,19 +115,23 @@ a:hover {
 }
 
 .recent-posts .card {
-  min-height: 80px; /* Recent Postsカードの最小高さを設定 */
-  padding: 30px; /* パディングを小さく設定 */
-  justify-content: flex-start; /* コンテンツを上部に揃える */
+  min-height: 100px; /* 高さを少し小さく */
+  padding: 15px; /* パディングを調整 */
+  justify-content: flex-start;
 }
 
 .recent-posts .card h3 {
-  text-align: left; /* タイトルを左詰めに設定 */
-  margin: 0;
+  text-align: left;
+  margin: 0 0 10px; /* 下に少し余白を追加 */
   font-size: 1.2rem;
+  color: #000; /* タイトルの色を黒に設定 */
 }
 
 .recent-posts .card p {
-  text-align: right; /* 日付を右詰めに設定 */
+  text-align: right;
   margin-top: auto;
   font-size: 0.9rem;
+  color: #555; /* 日付の色を薄くして控えめに */
 }
+
+/* フッターやその他のセクションも追加する場合はここに記載 */
