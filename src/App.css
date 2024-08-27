@@ -316,3 +316,25 @@ h2 a:hover {
   color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
   text-decoration: underline; /* ホバー時に下線を追加 */
 }
+
+/* ヘッダー内のGitHubリンクのスタイル */
+.github-link {
+  position: absolute;
+  top: 50%;
+  right: 30px; /* 右側にさらに隙間を開ける */
+  transform: translateY(-50%); /* リンク全体を中央に揃える */
+  display: flex;
+  align-items: center; /* アイコンとテキストを中央揃え */
+}
+
+.github-icon {
+  width: 30px; /* アイコンのサイズ */
+  height: 30px;
+  margin-left: 8px; /* アイコンとテキストの間に少し余白を追加 */
+  transition: transform 0.3s ease;
+}
+
+.github-icon:hover,
+.github-text:hover {
+  transform: scale(1.1); /* ホバー時に少し大きくする */
+}

@@ -5,6 +5,7 @@ import logo from './assets/takoyaki3.png';
 import { marked } from 'marked';
 import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
+import githubIcon from './assets/github-mark.png';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -135,8 +136,13 @@ function App() {
           <img src={logo} className="header-logo" alt="App Logo" />
         </a>
         <a href="/?pageID=top" style={{ textDecoration: 'none', color: 'white' }}>
-          <h2 style={{color: 'white'}}>たこやきさんのつぶやき</h2>
+          <h2 style={{ color: 'white' }}>たこやきさんのつぶやき</h2>
         </a>
+        <div className="github-link">
+          <a href="https://github.com/takoyaki-3/takoyaki3-com" target="_blank" rel="noopener noreferrer">
+            <img src={githubIcon} alt="GitHub" className="github-icon" />
+          </a>
+        </div>
       </header>
       <div className="app-content">
         {pageID === 'top' && (
