@@ -1,0 +1,110 @@
+body {
+  background-color: #eee; /* ページ全体の背景色を#eeeに設定 */
+  color: #000; /* 文字の色を黒に設定 */
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  background-color: #eee; /* ルート要素の背景色を#eeeに設定 */
+  color: #000; /* 文字の色を黒に設定 */
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #009688; /* ヘッダーの背景色 */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 左寄せに変更 */
+  padding-left: 20px; /* 左端から少し余白を持たせる */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000; /* 他の要素より前面に表示するための設定 */
+}
+
+.app-content {
+  padding-top: 150px; /* ヘッダーの高さ分だけ余白を追加 */
+  color: #000; /* コンテンツ部分の文字色を黒に設定 */
+}
+
+.header-logo {
+  height: 50px; /* ロゴの高さを設定 */
+  margin-right: 20px; /* ロゴとテキストの間に余白を追加 */
+}
+
+.centered-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.recent-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
