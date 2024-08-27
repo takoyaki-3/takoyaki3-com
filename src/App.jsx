@@ -226,20 +226,20 @@ function App() {
 
         {pageID !== 'top' && page && (
           <div>
-            <div className="text-right">
-              <p>
-                作成日時：{page.created}
-                <br />
-                更新日時：{page.updated}
-              </p>
-            </div>
             <div className="card">
+              <div className="text-right">
+                <p>
+                  作成日時：{page.created}
+                  <br />
+                  更新日時：{page.updated}
+                </p>
+              </div>
               <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
-            </div>
-            <div className="tags">
-              {page.tags.map((tag) => (
-                <a key={tag} href={`/?pageID=tag&tag=${tag}`}>#{tag} </a>
-              ))}
+              <div className="tags">
+                {page.tags.map((tag) => (
+                  <a key={tag} href={`/?pageID=tag&tag=${tag}`}>#{tag} </a>
+                ))}
+              </div>
             </div>
           </div>
         )}
