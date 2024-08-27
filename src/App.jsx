@@ -226,7 +226,7 @@ function App() {
 
         {pageID !== 'top' && page && (
           <div>
-            <div className="card">
+            <div className="article-card">  {/* 新しいクラス名に変更 */}
               <div className="text-right">
                 <p>
                   作成日時：{page.created}
