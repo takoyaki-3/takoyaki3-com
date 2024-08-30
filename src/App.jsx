@@ -7,6 +7,8 @@ import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import githubIcon from './assets/github-mark.png';
 
+const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data'
+
 function App() {
   const [count, setCount] = useState(0);
   const [pageID, setPageID] = useState(null);
@@ -67,7 +69,7 @@ function App() {
 
   const fetchContent = async (pageID, type, tag) => {
     try {
-      const idListResponse = await fetch('/data/recent_updated.json');
+      const idListResponse = await fetch(`${content_storage}/recent_updated.json`);
       const ids = await idListResponse.json();
       const pagesData = {};
       const recentPostsData = [];
@@ -78,7 +80,7 @@ function App() {
       for (let i = 0; i < ids.length; i++) {
         const id = ids[i].id;
         if (!uniqueIds.has(id)) {
-          const postResponse = await fetch(`/data/contents/${id}.json`);
+          const postResponse = await fetch(`${content_storage}/contents/${id}.json`);
           const postJSON = await postResponse.json();
           postJSON.created = formatDate(postJSON.created);
           postJSON.updated = formatDate(postJSON.updated);
@@ -93,12 +95,12 @@ function App() {
       setPages(pagesData);
       setRecentPosts(recentPostsData);
 
-      const tagsResponse = await fetch('/data/tag_list.json');
+      const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
       const tagsData = await tagsResponse.json();
       setTags(tagsData);
 
       if (tag) {
-        const tagResponse = await fetch(`/data/tags/${tag}.json`);
+        const tagResponse = await fetch(`${content_storage}/tags/${tag}.json`);
         const tagIds = await tagResponse.json();
         const pageList = tagIds
           .map((e) => e.id)
@@ -115,7 +117,7 @@ function App() {
         // Fetch content based on file type (md or html)
         let content = '';
         if (type === 'md') {
-          const contentResponse = await fetch(`/data/contents/${pageID}.md`);
+          const contentResponse = await fetch(`${content_storage}/contents/${pageID}.md`);
           content = await contentResponse.text();
           content = marked(content, {
             highlight: (code, lang) => {
@@ -125,7 +127,7 @@ function App() {
             },
           });
         } else if (type === 'html') {
-          const contentResponse = await fetch(`/data/contents/${pageID}.html`);
+          const contentResponse = await fetch(`${content_storage}/contents/${pageID}.html`);
           content = await contentResponse.text();
         }
         setPageHTML(content);
@@ -212,7 +214,7 @@ function App() {
             <h2>Recent Posts</h2>
             <div className="recent-posts">
               {recentPosts.map((post) => (
-                <a key={post.id} href={`/?pageID=${post.id}&type=md`}>
+                <a key={post.id} href={`/?pageID=${post.id}&type=${post.type}`}>
                   <div className="card">
                     <h3>{post.title}</h3>
                     <p style={{ textAlign: 'right' }}>
