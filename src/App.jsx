@@ -7,6 +7,8 @@ import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import githubIcon from './assets/github-mark.png';
 
+const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data'
+
 function App() {
   const [count, setCount] = useState(0);
   const [pageID, setPageID] = useState(null);
@@ -16,7 +18,7 @@ function App() {
   const [page, setPage] = useState(null);
   const [pageHTML, setPageHTML] = useState('');
   const [recentPosts, setRecentPosts] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState({});
   const sns = [
     {
       text: 'GitHub',
@@ -67,43 +69,43 @@ function App() {
 
   const fetchContent = async (pageID, type, tag) => {
     try {
-      const idListResponse = await fetch(
-        'https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-key'
-      );
+      const idListResponse = await fetch(`${content_storage}/recent_updated.json`);
       const ids = await idListResponse.json();
       const pagesData = {};
       const recentPostsData = [];
 
+      // Set to track unique IDs
+      const uniqueIds = new Set();
+
       for (let i = 0; i < ids.length; i++) {
-        const id = ids[i].data;
-        const postResponse = await fetch(
-          `https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-article-${id}`
-        );
-        const postData = await postResponse.json();
-        const postJSON = JSON.parse(postData[0].data);
-        postJSON.created = formatDate(postJSON.created); // 日付をフォーマット
-        postJSON.updated = formatDate(postJSON.updated); // 日付をフォーマット
-        pagesData[postJSON.id] = postJSON;
-        if (i < 3) {
-          recentPostsData.push(postJSON);
+        const id = ids[i].id;
+        if (!uniqueIds.has(id)) {
+          const postResponse = await fetch(`${content_storage}/contents/${id}.json`);
+          const postJSON = await postResponse.json();
+          postJSON.created = formatDate(postJSON.created);
+          postJSON.updated = formatDate(postJSON.updated);
+          pagesData[postJSON.id] = postJSON;
+          uniqueIds.add(id);
+          if (recentPostsData.length < 3) {
+            recentPostsData.push(postJSON);
+          }
         }
       }
 
       setPages(pagesData);
       setRecentPosts(recentPostsData);
 
-      const tagsResponse = await fetch(
-        'https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-tags'
-      );
+      const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
       const tagsData = await tagsResponse.json();
       setTags(tagsData);
 
       if (tag) {
-        const tagResponse = await fetch(
-          `https://key-value-array-store.api.takoyaki3.com/?key=takoyaki3-com-tag-${tag}`
-        );
+        const tagResponse = await fetch(`${content_storage}/tags/${tag}.json`);
         const tagIds = await tagResponse.json();
-        const pageList = tagIds.map((e) => e.data);
+        const pageList = tagIds
+          .map((e) => e.id)
+          .filter((id) => pagesData[id]); // Filter out any IDs that do not exist in pagesData
+
         setPages((prevPages) => ({
           ...prevPages,
           pageList,
@@ -112,8 +114,11 @@ function App() {
 
       if (type && pageID && pagesData[pageID]) {
         setPage(pagesData[pageID]);
-        let content = pagesData[pageID].file;
+        // Fetch content based on file type (md or html)
+        let content = '';
         if (type === 'md') {
+          const contentResponse = await fetch(`${content_storage}/contents/${pageID}.md`);
+          content = await contentResponse.text();
           content = marked(content, {
             highlight: (code, lang) => {
               return (
@@ -121,6 +126,9 @@ function App() {
               );
             },
           });
+        } else if (type === 'html') {
+          const contentResponse = await fetch(`${content_storage}/contents/${pageID}.html`);
+          content = await contentResponse.text();
         }
         setPageHTML(content);
       }
@@ -206,7 +214,7 @@ function App() {
             <h2>Recent Posts</h2>
             <div className="recent-posts">
               {recentPosts.map((post) => (
-                <a key={post.id} href={`/?pageID=${post.id}&type=md`}>
+                <a key={post.id} href={`/?pageID=${post.id}&type=${post.type}`}>
                   <div className="card">
                     <h3>{post.title}</h3>
                     <p style={{ textAlign: 'right' }}>
@@ -232,7 +240,7 @@ function App() {
 
         {pageID !== 'top' && page && (
           <div>
-            <div className="article-card">  {/* 新しいクラス名に変更 */}
+            <div className="article-card">  
               <div className="text-right">
                 <p>
                   作成日時：{page.created}
@@ -255,7 +263,7 @@ function App() {
             <h2>タグ：<a>#{tag}</a></h2>
             <div className="tag-grid">
               {pages.pageList && pages.pageList.map((id) => (
-                <a key={id} href={`/?pageID=${pages[id].id}&type=${pages[id].type}`}>
+                <a key={id} href={`/?pageID=${id}&type=${pages[id].type}`}>
                   <div className="card">
                     <h3>{pages[id].title}</h3>
                     <p style={{ textAlign: 'right' }}>
@@ -274,8 +282,8 @@ function App() {
           <div>
             <h2>タグ一覧</h2>
             <div className="tag-list">
-              {tags.map((tag) => (
-                <a key={tag.data} href={`/?pageID=tag&tag=${tag.data}`}>#{tag.data}</a>
+              {Object.keys(tags).map((tag) => (
+                <a key={tag} href={`/?pageID=tag&tag=${tag}`}>#{tag}</a>
               ))}
             </div>
           </div>
