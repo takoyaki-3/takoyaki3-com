@@ -39,6 +39,11 @@ function App() {
       href: 'https://zenn.dev/takoyaki3',
     },
     {
+      text: 'Instagram',
+      icon: '/assets/Instagram_Glyph_Gradient.svg',
+      href: 'https://www.instagram.com/takoyaki3333333',
+    },
+    {
       text: 'Mail',
       icon: '/assets/mail.png',
       href: 'mailto:mail@takoyaki3.com',
