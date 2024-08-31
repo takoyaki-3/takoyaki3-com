@@ -80,7 +80,7 @@ function App() {
       }
 
       setPage(pageData);
-      setRecentPosts(recentPostsData);
+      setRecentPosts(recentPostsData.slice(0, 3));
 
       const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
       const tagsData = await tagsResponse.json();
