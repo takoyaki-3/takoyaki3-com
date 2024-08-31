@@ -140,10 +140,10 @@ function App() {
   return (
     <>
       <header className="app-header">
-        <a href="/?pageID=top">
+        <a href="/">
           <img src={logo} className="header-logo" alt="App Logo" />
         </a>
-        <a href="/?pageID=top" style={{ textDecoration: 'none', color: 'white' }}>
+        <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
           <h2 style={{ color: 'white' }}>たこやきさんのつぶやき</h2>
         </a>
         <div className="github-link">
