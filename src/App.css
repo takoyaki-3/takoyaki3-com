@@ -10,7 +10,7 @@ body {
 #root {
   max-width: 1200px; /* 最大幅を1200pxに設定 */
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
   background-color: #f5f5f5; /* 背景色を一致させる */
   color: #333; /* 文字の色を濃いグレーに設定 */
@@ -147,7 +147,7 @@ a:hover {
 
 /* タグ一覧ページのタグリンクを左揃えにし、余白を追加 */
 .tag-list a {
-  color: #007bff !important;
+  color: #0056b3 !important;
   text-decoration: none;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -208,7 +208,7 @@ a:hover {
 
 /* タグのスタイリング - 各記事に付けるタグ */
 .tags a {
-  color: #007bff !important; /* タグの色を青色に設定 */
+  color: #0056b3 !important; /* タグの色を青色に設定 */
   margin-right: 5px; /* タグ間に少し余白を追加 */
   text-decoration: none; /* 下線を削除 */
 }
@@ -220,7 +220,7 @@ a:hover {
 
 /* タグのスタイリング - タグごとの記事一覧ページ */
 .tag-grid .card .tags a {
-  color: #007bff !important; /* タグの色を青色に設定 */
+  color: #0056b3 !important; /* タグの色を青色に設定 */
   text-decoration: none; /* 下線を削除 */
 }
 
@@ -231,7 +231,7 @@ a:hover {
 
 /* タグごとの記事一覧ページでのタグリンクのスタイリング */
 h2 a {
-  color: #007bff !important; /* タグの色を青色に設定 */
+  color: #0056b3 !important; /* タグの色を青色に設定 */
   text-decoration: none; /* 下線を削除 */
 }
 
@@ -248,7 +248,7 @@ h2 a:hover {
 }
 
 .card .tags a {
-  color: #007bff !important; /* タグの色を青色に設定 */
+  color: #0056b3 !important; /* タグの色を青色に設定 */
   margin-right: 10px; /* タグ間に余白を追加 */
   text-decoration: none; /* 下線を削除 */
 }
