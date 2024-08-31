@@ -10,9 +10,7 @@ import githubIcon from './assets/github-mark.png';
 const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data'
 
 function App() {
-  const [count, setCount] = useState(0);
   const [pageID, setPageID] = useState(null);
-  const [type, setType] = useState(null);
   const [tag, setTag] = useState(null);
   const [pages, setPages] = useState([]);
   const [page, setPage] = useState({tags: []});
@@ -48,13 +46,11 @@ function App() {
   ];
 
   useEffect(() => {
-    document.title = 'たこやきさんのつぶやき';
     const urlParams = new URLSearchParams(window.location.search);
     const pageID = urlParams.get('pageID') || 'top';
     const type = urlParams.get('type');
     const tag = urlParams.get('tag');
     setPageID(pageID);
-    setType(type);
     setTag(tag);
     fetchContent(pageID, type, tag);
   }, []);
@@ -67,6 +63,11 @@ function App() {
     return `${year}-${month}-${day}`;
   };
 
+  // 特殊ページか否かの判定
+  const isSpecialPage = (pageID) => {
+    return !pageID || pageID === 'top' || pageID === 'tagList' || pageID === 'tag';
+  }
+
   const fetchContent = async (pageID, type, tag) => {
     try {
       const recentUpdatedResponse = await fetch(`${content_storage}/recent_updated.json`);
@@ -74,7 +75,7 @@ function App() {
       let pageData = {
         tags: [],
       }
-      if (pageID && pageID !== 'top' && pageID !== 'tag' && pageID !== 'tagList') {
+      if (!isSpecialPage(pageID)) {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
         pageData = await pageDataResponse.json();
       }
@@ -217,7 +218,7 @@ function App() {
           </div>
         )}
 
-        {pageID !== 'top' && pageID !== 'tagList' && pageID !== 'tag' && pageID && page && (
+        {!isSpecialPage(pageID) && page && (
           <div>
             <div className="article-card">  
               <div className="text-right">
