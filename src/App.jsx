@@ -14,8 +14,8 @@ function App() {
   const [pageID, setPageID] = useState(null);
   const [type, setType] = useState(null);
   const [tag, setTag] = useState(null);
-  const [pages, setPages] = useState({});
-  const [page, setPage] = useState(null);
+  const [pages, setPages] = useState([]);
+  const [page, setPage] = useState({tags: []});
   const [pageHTML, setPageHTML] = useState('');
   const [recentPosts, setRecentPosts] = useState([]);
   const [tags, setTags] = useState({});
@@ -69,30 +69,17 @@ function App() {
 
   const fetchContent = async (pageID, type, tag) => {
     try {
-      const idListResponse = await fetch(`${content_storage}/recent_updated.json`);
-      const ids = await idListResponse.json();
-      const pagesData = {};
-      const recentPostsData = [];
-
-      // Set to track unique IDs
-      const uniqueIds = new Set();
-
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i].id;
-        if (!uniqueIds.has(id)) {
-          const postResponse = await fetch(`${content_storage}/contents/${id}.json`);
-          const postJSON = await postResponse.json();
-          postJSON.created = formatDate(postJSON.created);
-          postJSON.updated = formatDate(postJSON.updated);
-          pagesData[postJSON.id] = postJSON;
-          uniqueIds.add(id);
-          if (recentPostsData.length < 3) {
-            recentPostsData.push(postJSON);
-          }
-        }
+      const recentUpdatedResponse = await fetch(`${content_storage}/recent_updated.json`);
+      const recentPostsData = await recentUpdatedResponse.json();
+      let pageData = {
+        tags: [],
+      }
+      if (pageID && pageID !== 'top' && pageID !== 'tag' && pageID !== 'tagList') {
+        const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
+        pageData = await pageDataResponse.json();
       }
 
-      setPages(pagesData);
+      setPage(pageData);
       setRecentPosts(recentPostsData);
 
       const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
@@ -101,19 +88,11 @@ function App() {
 
       if (tag) {
         const tagResponse = await fetch(`${content_storage}/tags/${tag}.json`);
-        const tagIds = await tagResponse.json();
-        const pageList = tagIds
-          .map((e) => e.id)
-          .filter((id) => pagesData[id]); // Filter out any IDs that do not exist in pagesData
-
-        setPages((prevPages) => ({
-          ...prevPages,
-          pageList,
-        }));
+        const tagPages = await tagResponse.json();
+        setPages(tagPages);
       }
 
-      if (type && pageID && pagesData[pageID]) {
-        setPage(pagesData[pageID]);
+      if (type && pageID && pageData) {
         // Fetch content based on file type (md or html)
         let content = '';
         if (type === 'md') {
@@ -218,9 +197,9 @@ function App() {
                   <div className="card">
                     <h3>{post.title}</h3>
                     <p style={{ textAlign: 'right' }}>
-                      作成日時：{post.created}
+                      作成日時：{formatDate(post.created)}
                       <br />
-                      更新日時：{post.updated}
+                      更新日時：{formatDate(post.updated)}
                     </p>
                   </div>
                 </a>
@@ -238,14 +217,14 @@ function App() {
           </div>
         )}
 
-        {pageID !== 'top' && page && (
+        {pageID !== 'top' && pageID !== 'tagList' && pageID !== 'tag' && pageID && page && (
           <div>
             <div className="article-card">  
               <div className="text-right">
                 <p>
-                  作成日時：{page.created}
+                  作成日時：{formatDate(page.created)}
                   <br />
-                  更新日時：{page.updated}
+                  更新日時：{formatDate(page.updated)}
                 </p>
               </div>
               <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
@@ -262,14 +241,14 @@ function App() {
           <div className="tag">
             <h2>タグ：<a>#{tag}</a></h2>
             <div className="tag-grid">
-              {pages.pageList && pages.pageList.map((id) => (
-                <a key={id} href={`/?pageID=${id}&type=${pages[id].type}`}>
+              {pages && pages.map((page) => (
+                <a key={`page-${page.id}`} href={`/?pageID=${page.id}&type=${page.type}`}>
                   <div className="card">
-                    <h3>{pages[id].title}</h3>
+                    <h3>{page.title}</h3>
                     <p style={{ textAlign: 'right' }}>
-                      作成日時：{pages[id].created}
+                      作成日時：{formatDate(page.created)}
                       <br />
-                      更新日時：{pages[id].updated}
+                      更新日時：{formatDate(page.updated)}
                     </p>
                   </div>
                 </a>
