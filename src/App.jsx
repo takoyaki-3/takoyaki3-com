@@ -7,13 +7,13 @@ import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import githubIcon from './assets/github-mark.png';
 
-const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data'
+const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 
 function App() {
   const [pageID, setPageID] = useState(null);
   const [tag, setTag] = useState(null);
   const [pages, setPages] = useState([]);
-  const [page, setPage] = useState({tags: []});
+  const [page, setPage] = useState({ tags: [] });
   const [pageHTML, setPageHTML] = useState('');
   const [recentPosts, setRecentPosts] = useState([]);
   const [tags, setTags] = useState({});
@@ -55,6 +55,19 @@ function App() {
     fetchContent(pageID, type, tag);
   }, []);
 
+  useEffect(() => {
+    // ページのHTMLが更新されたらテーブルをラップする
+    const tables = document.querySelectorAll('table');
+    tables.forEach((table) => {
+      if (!table.parentNode.classList.contains('table-container')) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-container';
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
+    });
+  }, [pageHTML]);  // pageHTMLが更新されたときに再度実行
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -63,18 +76,15 @@ function App() {
     return `${year}-${month}-${day}`;
   };
 
-  // 特殊ページか否かの判定
   const isSpecialPage = (pageID) => {
     return !pageID || pageID === 'top' || pageID === 'tagList' || pageID === 'tag';
-  }
+  };
 
   const fetchContent = async (pageID, type, tag) => {
     try {
       const recentUpdatedResponse = await fetch(`${content_storage}/recent_updated.json`);
       const recentPostsData = await recentUpdatedResponse.json();
-      let pageData = {
-        tags: [],
-      }
+      let pageData = { tags: [] };
       if (!isSpecialPage(pageID)) {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
         pageData = await pageDataResponse.json();
@@ -94,7 +104,6 @@ function App() {
       }
 
       if (type && pageID && pageData) {
-        // Fetch content based on file type (md or html)
         let content = '';
         if (type === 'md') {
           const contentResponse = await fetch(`${content_storage}/contents/${pageID}.md`);
@@ -102,7 +111,9 @@ function App() {
           content = marked(content, {
             highlight: (code, lang) => {
               return (
-                '<code class="hljs">' + highlight.highlightAuto(code, [lang]).value + '</code>'
+                '<code class="hljs">' +
+                highlight.highlightAuto(code, [lang]).value +
+                '</code>'
               );
             },
           });
@@ -127,7 +138,11 @@ function App() {
           <h2 style={{ color: 'white' }}>たこやきさんのつぶやき</h2>
         </a>
         <div className="github-link">
-          <a href="https://github.com/takoyaki-3/takoyaki3-com" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/takoyaki-3/takoyaki3-com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src={githubIcon} alt="GitHub" className="github-icon" />
           </a>
         </div>
@@ -144,7 +159,13 @@ function App() {
             </div>
             <div className="centered-content">
               {sns.map((s, i) => (
-                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="subheading mx-3">
+                <a
+                  key={i}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="subheading mx-3"
+                >
                   <img src={s.icon} alt={s.text} width="30px" />
                 </a>
               ))}
@@ -211,7 +232,7 @@ function App() {
               <Timeline
                 dataSource={{
                   sourceType: 'profile',
-                  screenName: 'takoyaki3333333'
+                  screenName: 'takoyaki3333333',
                 }}
               />
             </div>
@@ -220,7 +241,7 @@ function App() {
 
         {!isSpecialPage(pageID) && page && (
           <div>
-            <div className="article-card">  
+            <div className="article-card">
               <div className="text-right">
                 <p>
                   作成日時：{formatDate(page.created)}
@@ -242,18 +263,19 @@ function App() {
           <div className="tag">
             <h2>タグ：<a>#{tag}</a></h2>
             <div className="tag-grid">
-              {pages && pages.map((page) => (
-                <a key={`page-${page.id}`} href={`/?pageID=${page.id}&type=${page.type}`}>
-                  <div className="card">
-                    <h3>{page.title}</h3>
-                    <p style={{ textAlign: 'right' }}>
-                      作成日時：{formatDate(page.created)}
-                      <br />
-                      更新日時：{formatDate(page.updated)}
-                    </p>
-                  </div>
-                </a>
-              ))}
+              {pages &&
+                pages.map((page) => (
+                  <a key={`page-${page.id}`} href={`/?pageID=${page.id}&type=${page.type}`}>
+                    <div className="card">
+                      <h3>{page.title}</h3>
+                      <p style={{ textAlign: 'right' }}>
+                        作成日時：{formatDate(page.created)}
+                        <br />
+                        更新日時：{formatDate(page.updated)}
+                      </p>
+                    </div>
+                  </a>
+                ))}
             </div>
           </div>
         )}
