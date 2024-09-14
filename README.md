@@ -39,7 +39,6 @@ takoyaki3-com/
 ├── eslint.config.js
 ├── package.json
 └── vite.config.js
-
 ```
 
 - **public/**: 静的ファイル
@@ -54,7 +53,6 @@ takoyaki3-com/
 - **eslint.config.js**: ESLintの設定ファイル
 - **package.json**: プロジェクトの設定ファイル
 - **vite.config.js**: Viteの設定ファイル
-
 
 ### 環境変数の設定
 
@@ -74,7 +72,6 @@ const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 - `content_storage/contents/{pageID}.html`: HTML形式のコンテンツ
 - `content_storage/tag_list.json`: タグ一覧
 - `content_storage/tags/{tag}.json`: 指定されたタグに紐づくページ一覧
-
 
 ### インストール
 
@@ -111,15 +108,20 @@ npm run build
 
 このプロジェクトはMITライセンスで公開されています。
 
-
 ### その他
 
-- このプロジェクトは、React, Vite, Marked, Highlight.js, React Twitter Widgetsを使用しています.
+- このプロジェクトは、React, Vite, Marked, Highlight.js, React Twitter Widgetsを使用しています。
 - コンテンツはMarkdownまたはHTMLで記述できます。
 - コンテンツは外部リポジトリで管理されています。
-- Google Analyticsでアクセス状況を計測しています.
+- Google Analyticsでアクセス状況を計測しています。
 
-
-## 貢献
+### 貢献
 
 このプロジェクトへの貢献を歓迎します。バグレポート、機能リクエスト、プルリクエストなど、お気軽にご連絡ください。
+
+### 詳細な情報
+
+- **コンテンツの取得**:  コンテンツは`src/App.jsx`ファイル内の`fetchContent`関数で取得されています。
+- **Markdownのレンダリング**: Markdown形式のコンテンツは`src/App.jsx`ファイル内の`marked`ライブラリを使用してHTMLに変換されます。
+- **コードハイライト**: コードブロックは`src/App.jsx`ファイル内の`highlight.js`ライブラリを使用してシンタックスハイライトされます。
+- **テーブルのレスポンシブ対応**:  `src/App.css`ファイル内でCSSを使用して、テーブルがレスポンシブになるように設定されています。
