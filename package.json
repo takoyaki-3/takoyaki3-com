@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "readme": "git-repo-summarizer readme -- -m gemini-1.5-flash-exp-0827"
   },
   "dependencies": {
     "git-repo-summarizer": "^1.1.5",
