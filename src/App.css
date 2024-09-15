@@ -170,6 +170,18 @@ a:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* ホバー時の影を強調 */
 }
 
+/* サイトのアイコンを左下に配置 */
+.icon-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.site-icon {
+  width: 24px;
+  height: 24px;
+}
+
 /* Recent Posts のカード */
 .recent-posts {
   display: flex;
@@ -434,4 +446,105 @@ table a {
 table a:hover {
   color: #004d40; /* ホバー時に色を濃く */
   text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* 検索バーのスタイル */
+.search-bar {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.search-bar input[type="text"] {
+  width: 80%;
+  max-width: 500px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #888; /* 枠線を濃いグレーに設定 */
+  border-radius: 5px;
+  background-color: #fff; /* 背景色を白に設定 */
+  color: #333; /* 文字色を濃いグレーに設定 */
+}
+
+.search-bar input[type="text"]::placeholder {
+  color: #888; /* プレースホルダーの色を控えめなグレーに設定 */
+}
+
+/* もっと見るリンクのスタイル */
+.more-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #0056b3 !important;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.more-link:hover {
+  text-decoration: underline;
+  color: #003f7d !important;
+}
+
+/* グリッドレイアウト */
+.all-posts-grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 1200px) {
+  .all-posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .all-posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .all-posts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* カードスタイル */
+.all-posts-grid .card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  text-align: left;
+}
+
+.all-posts-grid .card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.all-posts-grid .card h3 {
+  margin-bottom: 15px;
+}
+
+.all-posts-grid .card p {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: right;
+}
+
+/* サイトのアイコンを左下に配置 */
+.all-posts-grid .icon-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.all-posts-grid .site-icon {
+  width: 24px;
+  height: 24px;
 }

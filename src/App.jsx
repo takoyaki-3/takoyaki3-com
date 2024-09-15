@@ -7,6 +7,11 @@ import highlight from 'highlight.js';
 import 'highlight.js/styles/github.css';
 import githubIcon from './assets/github-mark.png';
 
+// アイコンをインポート
+import qiitaIcon from './assets/qiita-favicon.png';
+import zennIcon from './assets/zenn-logo-only.svg';
+import ownIcon from './assets/takoyaki3.png';
+
 const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 
 function App() {
@@ -17,6 +22,8 @@ function App() {
   const [pageHTML, setPageHTML] = useState('');
   const [recentPosts, setRecentPosts] = useState([]);
   const [tags, setTags] = useState({});
+  const [allArticles, setAllArticles] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const sns = [
     {
       text: 'GitHub',
@@ -71,10 +78,11 @@ function App() {
         wrapper.appendChild(table);
       }
     });
-  }, [pageHTML]);  // pageHTMLが更新されたときに再度実行
-  
+  }, [pageHTML]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+    if (isNaN(date)) return dateString; // 日付が不正な場合はそのまま返す
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
@@ -82,13 +90,86 @@ function App() {
   };
 
   const isSpecialPage = (pageID) => {
-    return !pageID || pageID === 'top' || pageID === 'tagList' || pageID === 'tag';
+    return !pageID || pageID === 'top' || pageID === 'tagList' || pageID === 'tag' || pageID === 'allPosts';
   };
 
   const fetchContent = async (pageID, type, tag) => {
     try {
+      // 自サイトの最新記事を取得
       const recentUpdatedResponse = await fetch(`${content_storage}/recent_updated.json`);
       const recentPostsData = await recentUpdatedResponse.json();
+      const ownArticles = recentPostsData.map((post) => ({
+        ...post,
+        url: `/?pageID=${post.id}&type=${post.type}`,
+        type: 'own',
+        source: 'たこやきさんのつぶやき',
+      }));
+
+      // Qiitaの記事を取得
+      const fetchQiitaArticles = async () => {
+        try {
+          const qiitaResponse = await fetch('https://takoyaki-3.github.io/takoyaki3-com-data/qiita/qiita_data.json');
+          const qiitaArticles = await qiitaResponse.json();
+          return qiitaArticles.map((article) => ({
+            id: article.id,
+            title: article.title,
+            url: article.url,
+            created: article.created_at,
+            updated: article.updated_at,
+            tags: article.tags.map((tag) => tag.name),
+            type: 'qiita',
+            source: 'Qiita',
+          }));
+        } catch (error) {
+          console.error('Error fetching Qiita articles:', error);
+          return [];
+        }
+      };
+
+      // Zennの記事を取得（RSSフィードをパース）
+      const fetchZennArticles = async () => {
+        try {
+          const zennResponse = await fetch('https://takoyaki-3.github.io/takoyaki3-com-data/zenn/zenn_feed.xml');
+          const zennFeedText = await zennResponse.text();
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(zennFeedText, 'text/xml');
+          const items = xmlDoc.querySelectorAll('item');
+          const articles = [];
+          items.forEach((item) => {
+            const title = item.querySelector('title').textContent;
+            const link = item.querySelector('link').textContent;
+            const pubDate = item.querySelector('pubDate').textContent;
+            const description = item.querySelector('description').textContent;
+            const isoDate = new Date(pubDate).toISOString();
+            articles.push({
+              id: link,
+              title: title,
+              url: link,
+              created: isoDate,
+              updated: isoDate,
+              tags: [], // タグ情報はRSSから取得できないため空配列
+              type: 'zenn',
+              source: 'Zenn',
+            });
+          });
+          return articles;
+        } catch (error) {
+          console.error('Error fetching Zenn articles:', error);
+          return [];
+        }
+      };
+
+      const qiitaArticles = await fetchQiitaArticles();
+      const zennArticles = await fetchZennArticles();
+
+      // 全ての記事をマージして日付でソート
+      const allArticles = [...ownArticles, ...qiitaArticles, ...zennArticles];
+      allArticles.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+
+      // 最新の記事を設定（全記事から取得）
+      setRecentPosts(allArticles.slice(0, 3));
+      setAllArticles(allArticles);
+
       let pageData = { tags: [] };
       if (!isSpecialPage(pageID)) {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
@@ -96,7 +177,6 @@ function App() {
       }
 
       setPage(pageData);
-      setRecentPosts(recentPostsData.slice(0, 3));
 
       const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
       const tagsData = await tagsResponse.json();
@@ -128,10 +208,20 @@ function App() {
         }
         setPageHTML(content);
       }
+
+      // 全記事ページの場合、全ての記事を設定
+      if (pageID === 'allPosts') {
+        setPages(allArticles);
+      }
     } catch (error) {
       console.error('Error fetching content:', error);
     }
   };
+
+  // 検索結果をフィルタリング
+  const filteredPages = pages.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -157,7 +247,7 @@ function App() {
           <div>
             <div className="centered-content">
               <img
-                alt="Vuetify Logo"
+                alt="たこやきさんのアイコン"
                 src="/assets/takoyaki3.png"
                 className="shrink mr-2"
               />
@@ -220,10 +310,27 @@ function App() {
             <h2>Recent Posts</h2>
             <div className="recent-posts">
               {recentPosts.map((post) => (
-                <a key={post.id} href={`/?pageID=${post.id}&type=${post.type}`}>
+                <a
+                  key={post.id}
+                  href={post.url}
+                  target={post.type !== 'own' ? '_blank' : '_self'}
+                  rel="noopener noreferrer"
+                >
                   <div className="card">
+                    {/* サイトのアイコンを左下に表示 */}
+                    <div className="icon-container">
+                      {post.type === 'qiita' && (
+                        <img src={qiitaIcon} alt="Qiita" className="site-icon" />
+                      )}
+                      {post.type === 'zenn' && (
+                        <img src={zennIcon} alt="Zenn" className="site-icon" />
+                      )}
+                      {post.type === 'own' && (
+                        <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />
+                      )}
+                    </div>
                     <h3>{post.title}</h3>
-                    <p style={{ textAlign: 'right' }}>
+                    <p>
                       作成日時：{formatDate(post.created)}
                       <br />
                       更新日時：{formatDate(post.updated)}
@@ -231,6 +338,9 @@ function App() {
                   </div>
                 </a>
               ))}
+            </div>
+            <div>
+              <a href="/?pageID=allPosts" className="more-link">もっと見る</a>
             </div>
             <div>
               <h2>Twitter Timeline</h2>
@@ -292,6 +402,56 @@ function App() {
               {Object.keys(tags).map((tag) => (
                 <a key={tag} href={`/?pageID=tag&tag=${tag}`}>#{tag}</a>
               ))}
+            </div>
+          </div>
+        )}
+
+        {pageID === 'allPosts' && (
+          <div>
+            <h2>All Posts</h2>
+            {/* 検索バーを追加 */}
+            <div className="search-bar">
+              <input
+                type="text"
+                placeholder="記事を検索"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="all-posts-grid">
+              {filteredPages.length > 0 ? (
+                filteredPages.map((post) => (
+                  <a
+                    key={post.id}
+                    href={post.url}
+                    target={post.type !== 'own' ? '_blank' : '_self'}
+                    rel="noopener noreferrer"
+                  >
+                    <div className="card">
+                      {/* サイトのアイコンを左下に表示 */}
+                      <div className="icon-container">
+                        {post.type === 'qiita' && (
+                          <img src={qiitaIcon} alt="Qiita" className="site-icon" />
+                        )}
+                        {post.type === 'zenn' && (
+                          <img src={zennIcon} alt="Zenn" className="site-icon" />
+                        )}
+                        {post.type === 'own' && (
+                          <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />
+                        )}
+                      </div>
+                      <h3>{post.title}</h3>
+                      <p>
+                        作成日時：{formatDate(post.created)}
+                        <br />
+                        更新日時：{formatDate(post.updated)}
+                      </p>
+                    </div>
+                  </a>
+                ))
+              ) : (
+                <p>検索結果が見つかりませんでした。</p>
+              )}
             </div>
           </div>
         )}
