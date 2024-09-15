@@ -267,9 +267,8 @@ function App() {
             </div>
             <div className="text-center">
               <p>
-                たこやきさんの個人Webサイト「たこやきさんのつぶやき」へようこそ。
-                <br />
-                このサイトでは、以下のコンテンツを取り揃えております。
+                こんにちは、世界！<br/>
+                たこやきさんです。ITと交通が大好きです。
               </p>
             </div>
 
@@ -278,7 +277,7 @@ function App() {
               <a href="/?pageID=tagList">
                 <div className="card">
                   <h3>タグ一覧</h3>
-                  <p>Twitterに呟くには長い技術記事や旅行記などを投稿しています</p>
+                  <p>Xに呟くには長い技術記事や旅行記</p>
                 </div>
               </a>
               <a href="/?pageID=tag&tag=作品一覧">
@@ -290,13 +289,13 @@ function App() {
               <a href="/?pageID=tag&tag=論文">
                 <div className="card">
                   <h3>論文</h3>
-                  <p>大学の卒業論文やら高校時代に応募した論文やらのアーカイブ</p>
+                  <p>大学の卒業論文や高校時代に応募した論文</p>
                 </div>
               </a>
               <a href="/?pageID=tag&tag=コンテスト受賞">
                 <div className="card">
                   <h3>コンテスト受賞</h3>
-                  <p>コンテスト入賞作のアーカイブ</p>
+                  <p>コンテスト入賞作品の記録</p>
                 </div>
               </a>
               <a href="/?pageID=presentation-sheet&type=md">
@@ -343,7 +342,7 @@ function App() {
               <a href="/?pageID=allPosts" className="more-link">もっと見る</a>
             </div>
             <div>
-              <h2>Twitter Timeline</h2>
+              <h2>X Timeline</h2>
               <Timeline
                 dataSource={{
                   sourceType: 'profile',
