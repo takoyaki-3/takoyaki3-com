@@ -51,6 +51,11 @@ function App() {
       href: 'https://www.instagram.com/takoyaki3333333',
     },
     {
+      text: 'Linkedin',
+      icon: '/assets/LI-In-Bug.png',
+      href: 'https://www.linkedin.com/in/takoyaki3',
+    },
+    {
       text: 'Mail',
       icon: '/assets/mail.png',
       href: 'mailto:mail@takoyaki3.com',
