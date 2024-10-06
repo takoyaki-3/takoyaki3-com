@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import './App.css';
 import logo from './assets/takoyaki3.png';
 import githubIcon from './assets/github-mark.png';
@@ -16,6 +16,28 @@ import ownIcon from './assets/takoyaki3.png';
 const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 
 function App() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const pageID = searchParams.get('pageID');
+    const tag = searchParams.get('tag');
+
+    if (pageID) {
+      if (pageID === 'top') {
+        navigate('/');
+      } else if (pageID === 'tagList') {
+        navigate('/tagList');
+      } else if (pageID === 'allPosts') {
+        navigate('/allPosts');
+      } else if (pageID === 'tag' && tag) {
+        navigate(`/tag/${tag}`);
+      } else {
+        navigate(`/${pageID}`);
+      }
+    }
+  }, [navigate, searchParams]);
+
   return (
     <>
       <header className="app-header">
