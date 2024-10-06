@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { formatDate } from '../utils/dateUtils';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TagPage = () => {
@@ -27,7 +28,7 @@ const TagPage = () => {
           <a key={`page-${page.id}`} href={`/${page.id}`}>
             <div className="card">
               <h3>{page.title}</h3>
-              <p style={{ textAlign: 'right' }}>作成日時：{new Date(page.created).toISOString()}</p>
+              <p style={{ textAlign: 'right' }}>作成日時：{formatDate(page.created)}</p>
             </div>
           </a>
         ))}
