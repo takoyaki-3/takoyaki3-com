@@ -12,27 +12,39 @@
 -   **Twitter連携**: 最新のツイートをタイムラインで表示します。
 -   **アクセス解析**: Google Analyticsによるアクセス状況の計測で、サイト改善に役立てています。
 -   **外部サイトの記事連携**: ZennやQiitaの記事も自動で取得し、最新記事として表示します。
+-   **レスポンシブ対応**: PC、タブレット、スマートフォンなど、様々なデバイスで快適に閲覧できます。
+-   **検索機能**: 記事をタイトルで検索できます。
 
 ### 環境変数の設定
 
-このプロジェクトでは、コンテンツは外部リポジトリから取得しています。コンテンツのURLは`src/App.jsx`内の`content_storage`変数で定義されています。
+このプロジェクトでは、コンテンツは外部リポジトリから取得しています。コンテンツのURLは`.env`ファイル内の`VITE_CONTENT_STORAGE`変数で定義されています。
 
-```javascript
-const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data'; 
+1.  プロジェクトのルートディレクトリに`.env`ファイルを作成します。
+2.  `.env`ファイルに以下の行を追加します。
+
+```
+VITE_CONTENT_STORAGE = コンテンツのリポジトリURL
+```
+
+**例:**
+
+```
+VITE_CONTENT_STORAGE = https://takoyaki-3.github.io/takoyaki3-com-data
 ```
 
 ### APIエンドポイント
 
 以下のAPIエンドポイントからコンテンツを取得しています。
 
--   `content_storage/recent_updated.json`: 最新の投稿一覧
--   `content_storage/contents/{pageID}.json`: 各ページのメタデータ
--   `content_storage/contents/{pageID}.md`: Markdown形式のコンテンツ
--   `content_storage/contents/{pageID}.html`: HTML形式のコンテンツ
--   `content_storage/tag_list.json`: タグ一覧
--   `content_storage/tags/{tag}.json`: 指定されたタグに紐づくページ一覧
--   `content_storage/qiita/qiita_data.json`: Qiitaの記事データ
--   `content_storage/zenn/zenn_feed.xml`: ZennのRSSフィード
+-   `VITE_CONTENT_STORAGE/recent_updated.json`: 最新の投稿一覧
+-   `VITE_CONTENT_STORAGE/contents/{pageID}.json`: 各ページのメタデータ
+-   `VITE_CONTENT_STORAGE/contents/{pageID}.md`: Markdown形式のコンテンツ
+-   `VITE_CONTENT_STORAGE/contents/{pageID}.html`: HTML形式のコンテンツ
+-   `VITE_CONTENT_STORAGE/tag_list.json`: タグ一覧
+-   `VITE_CONTENT_STORAGE/tags/{tag}.json`: 指定されたタグに紐づくページ一覧
+-   `VITE_CONTENT_STORAGE/qiita/qiita_data.json`: Qiitaの記事データ
+-   `VITE_CONTENT_STORAGE/zenn/zenn_feed.xml`: ZennのRSSフィード
+
 
 ### プロジェクト構成
 
@@ -41,6 +53,7 @@ takoyaki3-com/
 ├── public/
 │   ├── assets/
 │   │   ├── Instagram_Glyph_Gradient.svg
+│   │   ├── LI-In-Bug.png
 │   │   ├── Twitter social icons - square - blue.png
 │   │   ├── github-mark.png
 │   │   ├── mail.png
@@ -53,13 +66,24 @@ takoyaki3-com/
 │   ├── App.css
 │   ├── App.jsx
 │   ├── assets/
+│   │   ├── LI-In-Bug.png
 │   │   ├── github-mark.png
 │   │   ├── qiita-favicon.png
 │   │   ├── react.svg
 │   │   ├── takoyaki3.png
 │   │   └── zenn-logo-only.svg
+│   ├── components/
+│   │   ├── AllPostsPage.jsx
+│   │   ├── ContentPage.jsx
+│   │   ├── NotFoundPage.jsx
+│   │   ├── TagListPage.jsx
+│   │   ├── TagPage.jsx
+│   │   └── TopPage.jsx
 │   ├── index.css
-│   └── main.jsx
+│   ├── main.jsx
+│   └── utils/
+│       └── dateUtils.js
+├── .env
 ├── eslint.config.js
 ├── package.json
 └── vite.config.js
@@ -70,13 +94,23 @@ takoyaki3-com/
     -   **`index.html`**: アプリケーションのエントリーポイント
 -   **`src/`**: ソースコード
     -   **`App.css`**: アプリケーション全体のスタイル
-    -   **`App.jsx`**: アプリケーションのメインコンポーネント
+    -   **`App.jsx`**: アプリケーションのメインコンポーネント、ルーティングを管理
     -   **`assets/`**: ソースコード内で使用する画像ファイル
+    -   **`components/`**: 各ページのコンポーネント
+        -   **`AllPostsPage.jsx`**: 全ての記事を表示するページ
+        -   **`ContentPage.jsx`**: 各記事の内容を表示するページ
+        -   **`NotFoundPage.jsx`**: 404 Not Found ページ
+        -   **`TagListPage.jsx`**: タグ一覧を表示するページ
+        -   **`TagPage.jsx`**: 特定のタグに紐づく記事を表示するページ
+        -   **`TopPage.jsx`**: トップページ
     -   **`index.css`**: グローバルスタイル
-    -   **`main.jsx`**: アプリケーションのエントリーポイント
+    -   **`main.jsx`**: アプリケーションのエントリーポイント、ルートコンポーネントをレンダリング
+    -   **`utils/`**: ユーティリティ関数
+        -   **`dateUtils.js`**: 日付フォーマット関数
+-   **`.env`**: 環境変数
 -   **`eslint.config.js`**: ESLintの設定ファイル
--   **`package.json`**: プロジェクトの設定ファイル
--   **`vite.config.js`**: Viteの設定ファイル
+-   **`package.json`**: プロジェクトの設定ファイル、依存関係などを管理
+-   **`vite.config.js`**: Viteの設定ファイル、ビルド設定などを管理
 
 ### インストール
 
@@ -108,6 +142,7 @@ npm run build
 3.  メニューから各ページにアクセスできます。
 4.  各ページには、タイトル、作成日時、更新日時、コンテンツ、タグが表示されます。
 5.  タグをクリックすると、そのタグに紐づくページ一覧が表示されます。
+6.  全記事ページでは、記事をタイトルで検索できます。
 
 ### ライセンス
 
@@ -119,14 +154,3 @@ npm run build
 -   コンテンツはMarkdownまたはHTMLで記述できます。
 -   コンテンツは外部リポジトリで管理されています。
 -   Google Analyticsでアクセス状況を計測しています。
-
-### 貢献
-
-このプロジェクトへの貢献を歓迎します。バグレポート、機能リクエスト、プルリクエストなど、お気軽にご連絡ください。
-
-### 詳細な情報
-
--   **コンテンツの取得**: コンテンツは`src/App.jsx`ファイル内の`fetchContent`関数で取得されています。
--   **Markdownのレンダリング**: Markdown形式のコンテンツは`src/App.jsx`ファイル内の`marked`ライブラリを使用してHTMLに変換されます。
--   **コードハイライト**: コードブロックは`src/App.jsx`ファイル内の`highlight.js`ライブラリを使用してシンタックスハイライトされます。
--   **テーブルのレスポンシブ対応**: `src/App.css`ファイル内でCSSを使用して、テーブルがレスポンシブになるように設定されています。
