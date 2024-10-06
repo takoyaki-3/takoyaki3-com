@@ -3,6 +3,7 @@ import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.png';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
+import { formatDate } from '../utils/dateUtils';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -199,9 +200,9 @@ const TopPage = () => {
               </div>
               <h3>{post.title}</h3>
               <p>
-                作成日時：{new Date(post.created).toISOString()}
+                作成日時：{formatDate(post.created)}
                 <br />
-                更新日時：{new Date(post.updated).toISOString()}
+                更新日時：{formatDate(post.updated)}
               </p>
             </div>
           </a>
