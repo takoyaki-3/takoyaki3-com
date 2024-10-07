@@ -180,7 +180,7 @@ const TopPage = () => {
             <p>コンテスト入賞作品の記録</p>
           </div>
         </a>
-        <a href="/presentation-sheet">
+        <a href="/tag/登壇資料">
           <div className="card">
             <h3>登壇資料</h3>
             <p>イベント等で登壇した際の資料</p>
