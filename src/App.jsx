@@ -7,7 +7,7 @@ import AllPostsPage from './components/AllPostsPage';
 import TagListPage from './components/TagListPage';
 import ContentPage from './components/ContentPage';
 import NotFoundPage from './components/NotFoundPage';
-import logo from './assets/takoyaki3.png';
+import logo from './assets/takoyaki3.svg';
 import githubIcon from './assets/github-mark.png';
 
 const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
@@ -39,7 +39,7 @@ function App() {
     <>
       <header className="app-header">
         <a href="/">
-          <img src={logo} className="header-logo" alt="App Logo" />
+          <img src={logo} className="header-logo" alt="App Logo"/>
         </a>
         <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
           <h2 style={{ color: 'white' }}>たこやきさんのつぶやき</h2>

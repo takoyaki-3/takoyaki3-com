@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'react-twitter-widgets';
-import ownIcon from '../assets/takoyaki3.png';
+import ownIcon from '../assets/takoyaki3.svg';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
 import { formatDate } from '../utils/dateUtils';
