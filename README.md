@@ -55,10 +55,10 @@ takoyaki3-com/
 │   │   ├── Instagram_Glyph_Gradient.svg
 │   │   ├── LI-In-Bug.png
 │   │   ├── Twitter social icons - square - blue.png
-│   │   ├── github-mark.png
 │   │   ├── mail.png
 │   │   ├── qiita-favicon.png
 │   │   ├── takoyaki3.png
+│   │   ├── takoyaki3.svg
 │   │   └── zenn-logo-only.svg
 │   ├── favicon.ico
 │   └── index.html
@@ -67,10 +67,9 @@ takoyaki3-com/
 │   ├── App.jsx
 │   ├── assets/
 │   │   ├── LI-In-Bug.png
-│   │   ├── github-mark.png
 │   │   ├── qiita-favicon.png
-│   │   ├── react.svg
 │   │   ├── takoyaki3.png
+│   │   ├── takoyaki3.svg
 │   │   └── zenn-logo-only.svg
 │   ├── components/
 │   │   ├── AllPostsPage.jsx
@@ -147,6 +146,7 @@ npm run build
 ### ライセンス
 
 このプロジェクトはMITライセンスで公開されています。 
+ただし、`assets`に含まれるロゴは他者が権利を所有するファイルが含まれており、このライセンスの適応範囲外となります。
 
 ### その他
 

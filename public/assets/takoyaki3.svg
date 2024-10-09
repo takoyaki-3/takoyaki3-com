@@ -1,30 +1,75 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1024"
+   height="1024"
+   viewBox="15 15 170 170"
+   version="1.1"
+   id="svg4"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
   <!-- 顔の背景と黒い枠線（顔と枠線の間に白い領域なし） -->
-  <circle cx="100" cy="100" r="80" fill="#FFFADD"/>
-  
-  <!-- 緑色の部分（時計の2時から10時の範囲に半分のサイズで配置） -->
-  <path d="
-    M169,60
-    A80,80 0 0,0 31,60
-    C60,30 130,100 169,60
-    Z
-  " fill="#007F0E" stroke="none" />
-    <!-- 黒い波打つ線を緑の波に沿って引く -->
-    <path d="
-      M169,60
-      A80,80 0 0,0 31,60
-      C60,30 130,100 169,60
-    " fill="none" stroke="#000000" stroke-width="2" />
-    
-  <circle cx="100" cy="100" r="80" fill="none" stroke="#000000" stroke-width="3" />
-  
+  <circle
+     cx="100"
+     cy="100"
+     fill="#FFF1E0"
+     id="circle1"
+     r="80" />
+  <!-- 緑色の部分（時計の200度から340度の範囲に半分のサイズで配置） -->
+  <path
+     d="M175.176,72.64 A80,80 0 0,0 24.824,72.64 C60,20 130,110 175.176,72.64 Z"
+     fill="#007F0E"
+     stroke="none"
+     id="path1" />
+  <!-- 黒い波打つ線を緑の波に沿って引く -->
+  <path
+     d="M175.176,72.64 A80,80 0 0,0 24.824,72.64 C60,20 130,110 175.176,72.64 Z"
+     fill="none"
+     stroke="#000000"
+     stroke-width="3"
+     id="path2" />
+  <circle
+     cx="100"
+     cy="100"
+     r="80"
+     fill="none"
+     stroke="#000000"
+     stroke-width="3"
+     id="circle2" />
   <!-- 茶色いつまようじ（たこ焼きに突き刺さっているように見えるよう調整） -->
-  <line x1="160" y1="20" x2="130" y2="60" stroke="#8B4513" stroke-width="7" stroke-linecap="round" />
-  
+  <line
+     x1="160"
+     y1="20"
+     x2="140"
+     y2="45"
+     stroke="#8B4513"
+     stroke-width="7"
+     stroke-linecap="round"
+     id="line2" />
   <!-- 目 -->
-  <line x1="70" y1="85" x2="70" y2="105" stroke="#000" stroke-width="3" stroke-linecap="round" />
-  <line x1="130" y1="90" x2="130" y2="110" stroke="#000" stroke-width="3" stroke-linecap="round" />
-  
+  <line
+     x1="70"
+     y1="85"
+     x2="70"
+     y2="105"
+     stroke="#000"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line3" />
+  <line
+     x1="130"
+     y1="90"
+     x2="130"
+     y2="110"
+     stroke="#000"
+     stroke-width="3"
+     stroke-linecap="round"
+     id="line4" />
   <!-- 横長にした笑顔 -->
-  <path d="M60,130 Q105,150 135,130" stroke="#000" stroke-width="3" fill="none" stroke-linecap="round" />
+  <path
+     d="m 51.870048,122.87374 c -3.176329,5.29545 10.795488,15.71397 28.311146,17.52246 17.214999,2.48811 39.935936,2.2215 55.318926,-11.51331"
+     stroke="#000000"
+     stroke-width="3"
+     fill="none"
+     stroke-linecap="round"
+     id="path4" />
 </svg>

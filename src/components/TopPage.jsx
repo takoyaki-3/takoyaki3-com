@@ -12,12 +12,12 @@ const TopPage = () => {
   const sns = [
     {
       text: 'GitHub',
-      icon: '/assets/github-mark.png',
+      icon: '/assets/github-mark.svg',
       href: 'https://github.com/takoyaki-3',
     },
     {
       text: 'Twitter',
-      icon: '/assets/Twitter social icons - square - blue.png',
+      icon: '/assets/X_logo_2023.svg',
       href: 'https://twitter.com/takoyaki3333333',
     },
     {
@@ -37,7 +37,7 @@ const TopPage = () => {
     },
     {
       text: 'Linkedin',
-      icon: '/assets/LI-In-Bug.png',
+      icon: '/assets/linkedin-icon.svg',
       href: 'https://www.linkedin.com/in/takoyaki3',
     },
     {
@@ -138,7 +138,12 @@ const TopPage = () => {
   return (
     <div>
       <div className="centered-content">
-        <img alt="たこやきさんのアイコン" src={ownIcon} className="shrink mr-2" />
+        <img 
+          alt="たこやきさんのアイコン" 
+          src={ownIcon} 
+          className="shrink mr-2" 
+          style={{ width: '80px', height: '80px' }} 
+        />
       </div>
       <div className="centered-content">
         {sns.map((s, i) => (

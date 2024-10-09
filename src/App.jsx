@@ -8,7 +8,7 @@ import TagListPage from './components/TagListPage';
 import ContentPage from './components/ContentPage';
 import NotFoundPage from './components/NotFoundPage';
 import logo from './assets/takoyaki3.svg';
-import githubIcon from './assets/github-mark.png';
+import githubIcon from './assets/github-mark.svg';
 
 const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 
