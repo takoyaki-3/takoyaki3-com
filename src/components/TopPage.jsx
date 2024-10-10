@@ -124,7 +124,7 @@ const TopPage = () => {
 
         // 全ての記事をマージして日付でソート
         const allArticles = [...ownArticles, ...qiitaArticles, ...zennArticles];
-        allArticles.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+        allArticles.sort((a, b) => new Date(b.created) - new Date(a.created));
 
         setRecentPosts(allArticles.slice(0, 3));
       } catch (error) {

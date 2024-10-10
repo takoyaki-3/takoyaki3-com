@@ -12,6 +12,7 @@ const TagPage = () => {
       try {
         const response = await fetch(`${content_storage}/tags/${tag}.json`);
         const data = await response.json();
+        data.sort((a, b) => new Date(b.created) - new Date(a.created));
         setPages(data);
       } catch (error) {
         console.error('Error fetching tag pages:', error);
