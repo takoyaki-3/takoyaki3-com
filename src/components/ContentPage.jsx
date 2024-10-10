@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
 import { marked } from 'marked';
+import NotFoundPage from './NotFoundPage';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -10,13 +11,14 @@ const ContentPage = () => {
   const { pageID } = useParams();
   const [page, setPage] = useState({ tags: [] });
   const [pageHTML, setPageHTML] = useState('');
+  const [pageExists, setPageExists] = useState(true);
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
         if (!pageDataResponse.ok) {
-          console.error('Page not found');
+          setPageExists(false);
           return;
         }
         const pageData = await pageDataResponse.json();
@@ -42,6 +44,7 @@ const ContentPage = () => {
         setPageHTML(content);
       } catch (error) {
         console.error('Error fetching content:', error);
+        setPageExists(false);
       }
     };
 
@@ -60,6 +63,11 @@ const ContentPage = () => {
       }
     });
   }, [pageHTML]);
+
+  // ページが存在しない場合は404ページを表示
+  if (!pageExists) {
+    return <NotFoundPage />;
+  }
 
   return (
     <div>
