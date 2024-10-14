@@ -14,6 +14,7 @@
 -   **外部サイトの記事連携**: ZennやQiitaの記事も自動で取得し、最新記事として表示します。
 -   **レスポンシブ対応**: PC、タブレット、スマートフォンなど、様々なデバイスで快適に閲覧できます。
 -   **検索機能**: 記事をタイトルで検索できます。
+-   **PWA対応**: プログレッシブウェブアプリとして動作し、オフラインでも閲覧できます。
 
 ### 環境変数の設定
 
@@ -45,52 +46,64 @@ VITE_CONTENT_STORAGE = https://takoyaki-3.github.io/takoyaki3-com-data
 -   `VITE_CONTENT_STORAGE/qiita/qiita_data.json`: Qiitaの記事データ
 -   `VITE_CONTENT_STORAGE/zenn/zenn_feed.xml`: ZennのRSSフィード
 
-
 ### プロジェクト構成
 
 ```
-takoyaki3-com/
-├── public/
-│   ├── assets/
+├── public
+│   ├── assets
+│   │   ├── github-mark.png
+│   │   ├── github-mark.svg
 │   │   ├── Instagram_Glyph_Gradient.svg
+│   │   ├── linkedin-icon.svg
 │   │   ├── LI-In-Bug.png
-│   │   ├── Twitter social icons - square - blue.png
 │   │   ├── mail.png
 │   │   ├── qiita-favicon.png
 │   │   ├── takoyaki3.png
 │   │   ├── takoyaki3.svg
-│   │   └── zenn-logo-only.svg
+│   │   ├── takoyaki3_192px.png
+│   │   ├── takoyaki3_512px.png
+│   │   └── X_logo_2023.svg
 │   ├── favicon.ico
-│   └── index.html
-├── src/
+│   ├── manifest.json
+│   └── service-worker.js
+├── src
 │   ├── App.css
 │   ├── App.jsx
-│   ├── assets/
-│   │   ├── LI-In-Bug.png
+│   ├── assets
+│   │   ├── github-mark.svg
 │   │   ├── qiita-favicon.png
 │   │   ├── takoyaki3.png
 │   │   ├── takoyaki3.svg
 │   │   └── zenn-logo-only.svg
-│   ├── components/
+│   ├── components
 │   │   ├── AllPostsPage.jsx
 │   │   ├── ContentPage.jsx
 │   │   ├── NotFoundPage.jsx
 │   │   ├── TagListPage.jsx
-│   │   ├── TagPage.jsx
-│   │   └── TopPage.jsx
+│   │   └── TagPage.jsx
 │   ├── index.css
 │   ├── main.jsx
-│   └── utils/
+│   ├── styles
+│   │   ├── AllPostsPage.css
+│   │   ├── ContentPage.css
+│   │   ├── NotFoundPage.css
+│   │   ├── TagListPage.css
+│   │   └── TopPage.css
+│   └── utils
 │       └── dateUtils.js
 ├── .env
 ├── eslint.config.js
+├── index.html
 ├── package.json
 └── vite.config.js
+
 ```
 
 -   **`public/`**: 静的ファイル
     -   **`assets/`**: 画像ファイル
     -   **`index.html`**: アプリケーションのエントリーポイント
+    -   **`manifest.json`**: PWAの設定ファイル
+    -   **`service-worker.js`**: PWAのサービスワーカー
 -   **`src/`**: ソースコード
     -   **`App.css`**: アプリケーション全体のスタイル
     -   **`App.jsx`**: アプリケーションのメインコンポーネント、ルーティングを管理
@@ -104,6 +117,7 @@ takoyaki3-com/
         -   **`TopPage.jsx`**: トップページ
     -   **`index.css`**: グローバルスタイル
     -   **`main.jsx`**: アプリケーションのエントリーポイント、ルートコンポーネントをレンダリング
+    -   **`styles/`**: 各コンポーネントのスタイル
     -   **`utils/`**: ユーティリティ関数
         -   **`dateUtils.js`**: 日付フォーマット関数
 -   **`.env`**: 環境変数
@@ -145,7 +159,7 @@ npm run build
 
 ### ライセンス
 
-このプロジェクトはMITライセンスで公開されています。 
+このプロジェクトはMITライセンスで公開されています。
 ただし、`assets`に含まれるロゴは他者が権利を所有するファイルが含まれており、このライセンスの適応範囲外となります。
 
 ### その他
