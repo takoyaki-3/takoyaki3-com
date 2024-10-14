@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
+import '../styles/TagPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TagPage = () => {

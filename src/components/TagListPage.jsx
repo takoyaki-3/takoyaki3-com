@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../styles/TagListPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 // タグ一覧ページコンポーネント
@@ -25,7 +26,7 @@ const TagListPage = () => {
       <h2>タグ一覧</h2>
       <div className="tag-list">
         {Object.keys(tags).map((tag) => (
-          <a key={tag} href={`/tag/${tag}`}>#{tag}</a>
+          <a className='tag' key={tag} href={`/tag/${tag}`}>#{tag}</a>
         ))}
       </div>
     </div>

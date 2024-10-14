@@ -1,0 +1,263 @@
+/* 全体の設定 */
+body {
+  background-color: #f5f5f5; /* 背景色をより明るいグレーに変更 */
+  color: #333; /* テキスト色を濃いグレーに変更 */
+  margin: 0;
+  font-family: 'Roboto', sans-serif; /* モダンなフォントを使用 */
+  line-height: 1.6; /* 読みやすさを向上 */
+}
+
+#root {
+  max-width: 1200px; /* 最大幅を1200pxに設定 */
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f5f5f5; /* 背景色を一致させる */
+  color: #333; /* 文字の色を濃いグレーに設定 */
+}
+
+a {
+  color: #000 !important; /* リンク色を黒に戻す */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:visited {
+  color: #000 !important; /* 訪問済みリンクの色も黒に設定 */
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #555 !important; /* ホバー時に少し濃いグレー */
+}
+
+/* ヘッダー */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #00695c; /* 深緑色に変更 */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), /* 軽い影 */
+              0 8px 16px rgba(0, 0, 0, 0.1); /* さらに深い影で立体感 */
+  z-index: 1000;
+}
+
+.header-logo {
+  height: 50px;
+  margin-right: 20px;
+}
+
+/* メインコンテンツ */
+.app-content {
+  padding-top: 100px; /* ヘッダーの高さを調整 */
+  color: #333;
+}
+
+/* 中央揃えのコンテンツ */
+.centered-content {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 15px; /* アイコン間隔を広げる */
+}
+
+/* グリッドレイアウト */
+.menu-grid, .tag-grid {
+  display: grid;
+  gap: 20px; /* カード間の幅を持たせる */
+}
+
+@media (min-width: 1200px) {
+  .menu-grid, .tag-grid {
+    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .menu-grid, .tag-grid {
+    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
+  }
+}
+
+@media (max-width: 767px) {
+  .menu-grid, .tag-grid {
+    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
+  }
+}
+
+/* メニューのカードはデフォルトの中央揃え */
+.card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px; /* 角を少し丸める */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 影を強化 */
+  transition: box-shadow 0.3s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* ホバー時の影を強調 */
+}
+
+/* サイトのアイコンを左下に配置 */
+.icon-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.site-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Recent Posts のカード */
+.recent-posts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recent-posts .card {
+  min-height: 100px; /* 高さを少し小さく */
+  padding: 15px; /* パディングを調整 */
+  justify-content: flex-start;
+}
+
+.recent-posts .card h3 {
+  text-align: left;
+  margin: 0 0 10px; /* 下に少し余白を追加 */
+  font-size: 1.2rem;
+  color: #000; /* タイトルの色を黒に設定 */
+}
+
+.recent-posts .card p {
+  text-align: right;
+  margin-top: auto;
+  font-size: 0.9rem;
+  color: #000; /* 日付の色を薄くして控えめに */
+}
+
+/* カード内のタグのスタイリング */
+.card .tags {
+  margin-top: 15px; /* タイトルや内容との間に少し余白を追加 */
+  padding-top: 10px;
+  border-top: 1px solid #ddd; /* 上の内容と区別するために境界線を追加 */
+}
+
+.card .tags a {
+  color: #0056b3 !important; /* タグの色を青色に設定 */
+  margin-right: 10px; /* タグ間に余白を追加 */
+  text-decoration: none; /* 下線を削除 */
+}
+
+.card .tags a:hover {
+  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* カード内の日付を右上に固定 */
+.card .text-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.9rem; /* 日付の文字サイズを調整 */
+  color: #555; /* 日付の色を少し薄くして控えめに */
+}
+
+/* カード全体のスタイル調整 */
+.card {
+  position: relative;
+  padding-top: 40px; /* 日付が内容と重ならないように上部に余白を追加 */
+  min-height: 150px; /* カードの最小高さを設定 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 上部と下部に要素を配置 */
+}
+
+/* タイトルの下に余白を追加 */
+.card h3 {
+  margin-bottom: 15px; /* タイトルと次の要素の間に余白を追加 */
+}
+
+/* 日付を右上に固定 */
+.card .text-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.9rem; /* 日付の文字サイズを調整 */
+  color: #555; /* 日付の色を少し薄くして控えめに */
+}
+
+/* カード内の内容部分 */
+.card .content {
+  flex-grow: 1; /* 残りのスペースを内容部分が占めるようにする */
+}
+
+/* タグのスタイリング */
+.card .tags {
+  margin-top: 15px; /* タグと他の内容との間に少し余白を追加 */
+  padding-top: 10px;
+  border-top: 1px solid #ddd; /* 上の内容と区別するために境界線を追加 */
+}
+
+/* タグ一覧ページのタグリンクのスタイリング */
+.tag-list a {
+  color: #0056b3 !important; /* タグの色を青色に設定 */
+  text-decoration: none; /* 下線を削除 */
+  margin-right: 5px; /* 右側に余白を追加 */
+  margin-bottom: 5px; /* 下側にも少し余白を追加 */
+  display: inline-block; /* 各タグをブロック要素として扱う */
+}
+
+.tag-list a:hover {
+  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
+  text-decoration: underline; /* ホバー時に下線を追加 */
+}
+
+/* スマホ表示用のスタイル */
+@media only screen and (max-width: 767px) {
+  .article-card img {
+    max-width: 100%;
+    max-height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* PC表示用のスタイル */
+@media only screen and (min-width: 768px) {
+  .article-card img {
+    max-width: 50%;
+    max-height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* もっと見るリンクのスタイル */
+.more-link {
+  display: inline-block;
+  margin-top: 10px;
+  color: #0056b3 !important;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.more-link:hover {
+  text-decoration: underline;
+  color: #003f7d !important;
+}

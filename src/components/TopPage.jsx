@@ -4,6 +4,7 @@ import ownIcon from '../assets/takoyaki3.svg';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
 import { formatDate } from '../utils/dateUtils';
+import '../styles/TopPage.css';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 

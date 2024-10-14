@@ -3,6 +3,7 @@ import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
 import ownIcon from '../assets/takoyaki3.svg';
 import { formatDate } from '../utils/dateUtils';
+import '../styles/AllPostsPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 // 全記事ページコンポーネント

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
 import { marked } from 'marked';
 import NotFoundPage from './NotFoundPage';
+import "../styles/ContentPage.css";
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 

@@ -1,0 +1,176 @@
+/* 全体の設定 */
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+}
+
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.card a {
+  color: #000 !important;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.card a:visited {
+  color: #000 !important;
+}
+
+.card a:hover {
+  text-decoration: underline;
+  color: #555 !important;
+}
+
+/* メインコンテンツ */
+.app-content {
+  padding-top: 100px;
+  color: #333;
+}
+
+/* 記事カードのスタイル */
+.article-card {
+  padding: 20px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  padding-top: 40px;
+  min-height: 180px;
+  text-align: left;
+  max-width: max-content;
+}
+
+.article-card h3 {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+/* カード内の日付を右上に固定 */
+.article-card .text-right {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* タグのスタイリング */
+.article-card .tags {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* タグリンクのスタイリング */
+.tags a {
+  color: #0056b3 !important;
+  margin-right: 5px;
+  text-decoration: none;
+}
+
+.tags a:hover {
+  color: #0056b3 !important;
+  text-decoration: underline;
+}
+
+/* テーブルをラップするコンテナ */
+.table-container {
+  max-width: calc(100vw - 2rem - 40px);
+  overflow-x: auto;
+}
+
+/* テーブルの基本スタイル */
+table {
+  width: 100%;
+  min-width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #fff;
+  display: block;
+  white-space: nowrap;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  word-wrap: break-word;
+}
+
+th {
+  background-color: #00695c;
+  color: white;
+  font-weight: bold;
+  text-align: left;
+  padding: 12px;
+  border-bottom: 2px solid #ddd;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+/* 偶数行に背景色を追加 */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* ホバー時の行の強調表示 */
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* テーブル内のリンクスタイル */
+table a {
+  color: #00695c;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+table a:hover {
+  color: #004d40;
+  text-decoration: underline;
+}
+
+/* 画像サイズの調整 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* スマホ表示用のスタイル */
+@media only screen and (max-width: 767px) {
+  .article-card img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* PC表示用のスタイル */
+@media only screen and (min-width: 768px) {
+  .article-card img {
+    max-width: 50%;
+    height: auto;
+  }
+}
