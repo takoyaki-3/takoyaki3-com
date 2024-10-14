@@ -9,10 +9,12 @@ const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 const AllPostsPage = () => {
   const [allArticles, setAllArticles] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true); // ローディング状態を管理
 
   useEffect(() => {
     const fetchAllArticles = async () => {
       try {
+        setLoading(true); // データ取得前にローディング開始
         // 自サイトの全記事を取得
         const recentUpdatedResponse = await fetch(`${content_storage}/recent_updated.json`);
         const recentPostsData = await recentUpdatedResponse.json();
@@ -26,8 +28,8 @@ const AllPostsPage = () => {
         // Qiitaの記事を取得
         const fetchQiitaArticles = async () => {
           try {
-            const qiitaResponse = await fetch(`${content_storage}/qiita/qiita_data.json`);
-            const qiitaArticles = await qiitaResponse.json();
+        const qiitaResponse = await fetch(`${content_storage}/qiita/qiita_data.json`);
+        const qiitaArticles = await qiitaResponse.json();
             return qiitaArticles.map((article) => ({
               id: article.id,
               title: article.title,
@@ -47,11 +49,11 @@ const AllPostsPage = () => {
         // Zennの記事を取得
         const fetchZennArticles = async () => {
           try {
-            const zennResponse = await fetch(`${content_storage}/zenn/zenn_feed.xml`);
-            const zennFeedText = await zennResponse.text();
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(zennFeedText, 'text/xml');
-            const items = xmlDoc.querySelectorAll('item');
+        const zennResponse = await fetch(`${content_storage}/zenn/zenn_feed.xml`);
+        const zennFeedText = await zennResponse.text();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(zennFeedText, 'text/xml');
+        const items = xmlDoc.querySelectorAll('item');
             const articles = [];
             items.forEach((item) => {
               const title = item.querySelector('title').textContent;
@@ -86,6 +88,8 @@ const AllPostsPage = () => {
         setAllArticles(allArticles);
       } catch (error) {
         console.error('Error fetching all articles:', error);
+      } finally {
+        setLoading(false); // データ取得が完了したらローディング終了
       }
     };
 
@@ -93,24 +97,30 @@ const AllPostsPage = () => {
   }, []);
 
   // 検索結果をフィルタリング
-  const filteredArticles = allArticles.filter((post) =>
+  const filteredArticles = allArticles.filter(post =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div>
       <h2>All Posts</h2>
-      {/* 検索バー */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="記事を検索"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
-      <div className="all-posts-grid">
-        {filteredArticles.length > 0 ? (
+      {loading ? (
+        <div className="loading-screen">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <>
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="記事を検索"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <div className="all-posts-grid">
+            {filteredArticles.length > 0 ? (
           filteredArticles.map((post) => (
             <a
               key={post.id}
@@ -118,32 +128,28 @@ const AllPostsPage = () => {
               target={post.type !== 'own' ? '_blank' : '_self'}
               rel="noopener noreferrer"
             >
-              <div className="card">
-                {/* サイトのアイコンを左下に表示 */}
-                <div className="icon-container">
-                  {post.type === 'qiita' && (
-                    <img src={qiitaIcon} alt="Qiita" className="site-icon" />
-                  )}
-                  {post.type === 'zenn' && (
-                    <img src={zennIcon} alt="Zenn" className="site-icon" />
-                  )}
-                  {post.type === 'own' && (
-                    <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />
-                  )}
-                </div>
-                <h3>{post.title}</h3>
+                  <div className="card">
+                  {/* サイトのアイコンを左下に表示 */}
+                    <div className="icon-container">
+                      {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" className="site-icon" />}
+                      {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" className="site-icon" />}
+                      {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />}
+                    </div>
+                    <h3>{post.title}</h3>
                 <p>
                   作成日時：{formatDate(post.created)}
                   <br />
                   更新日時：{formatDate(post.updated)}
                 </p>
-              </div>
-            </a>
-          ))
-        ) : (
-          <p>検索結果が見つかりませんでした。</p>
-        )}
-      </div>
+                  </div>
+                </a>
+              ))
+            ) : (
+              <p>検索結果が見つかりませんでした。</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
