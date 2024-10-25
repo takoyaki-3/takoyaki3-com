@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Card from './Card';
-import '../styles/AllPostsPage.css';
+import PostsGrid from './PostsGrid';
+import SearchBar from './SearchBar';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const AllPostsPage = () => {
@@ -102,21 +102,8 @@ const AllPostsPage = () => {
         </div>
       ) : (
         <>
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="記事を検索"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="all-posts-grid">
-            {filteredArticles.length > 0 ? (
-              filteredArticles.map((post) => <Card key={post.id} post={post} />)
-            ) : (
-              <p>検索結果が見つかりませんでした。</p>
-            )}
-          </div>
+          <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <PostsGrid posts={filteredArticles} />
         </>
       )}
     </div>

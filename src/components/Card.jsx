@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
 import ownIcon from '../assets/takoyaki3.svg';
 import { formatDate } from '../utils/dateUtils';
 
-const cardStyles = {
+const cardBaseStyles = {
   padding: '20px',
   background: 'white',
   border: '1px solid #ddd',
@@ -36,6 +36,11 @@ const siteIconStyles = {
 
 const h3Styles = {
   marginBottom: '15px',
+  transition: 'text-decoration 0.3s ease',
+};
+
+const h3HoverStyles = {
+  textDecoration: 'underline',
 };
 
 const pStyles = {
@@ -46,6 +51,8 @@ const pStyles = {
 
 // カードコンポーネント
 const Card = ({ post }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <a
       key={post.id}
@@ -53,14 +60,19 @@ const Card = ({ post }) => {
       target={post.type !== 'own' ? '_blank' : '_self'}
       rel="noopener noreferrer"
       style={{ textDecoration: 'none', color: 'inherit' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="card" style={cardStyles}>
+      <div
+        className="card"
+        style={{ ...cardBaseStyles, ...(isHovered ? cardHoverStyles : {}) }}
+      >
         <div className="icon-container" style={iconContainerStyles}>
           {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" style={siteIconStyles} />}
           {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" style={siteIconStyles} />}
           {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" style={siteIconStyles} />}
         </div>
-        <h3 style={h3Styles}>{post.title}</h3>
+        <h3 style={{ ...h3Styles, ...(isHovered ? h3HoverStyles : {}) }}>{post.title}</h3>
         <p style={pStyles}>
           作成日時：{formatDate(post.created)}
           <br />
