@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "readme": "git-repo-summarizer readme -- -m gemini-1.5-flash-exp-0827"
+    "readme": "git-repo-summarizer readme -- -m gemini-1.5-flash-exp-0827",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "git-repo-summarizer": "^1.1.5",
@@ -20,7 +22,16 @@
     "react-twitter-widgets": "^1.11.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^1.9.0",
     "@eslint/js": "^9.9.0",
+    "@storybook/addon-essentials": "^8.3.6",
+    "@storybook/addon-interactions": "^8.3.6",
+    "@storybook/addon-links": "^8.3.6",
+    "@storybook/addon-onboarding": "^8.3.6",
+    "@storybook/blocks": "^8.3.6",
+    "@storybook/react": "^8.3.6",
+    "@storybook/react-vite": "^8.3.6",
+    "@storybook/test": "^8.3.6",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
@@ -28,7 +39,15 @@
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
+    "eslint-plugin-storybook": "^0.10.1",
     "globals": "^15.9.0",
+    "prop-types": "^15.8.1",
+    "storybook": "^8.3.6",
     "vite": "^5.4.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }

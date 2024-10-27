@@ -17,18 +17,18 @@ body {
 }
 
 a {
-  color: #000 !important; /* リンク色を黒に戻す */
+  color: #000; /* リンク色を黒に戻す */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:visited {
-  color: #000 !important; /* 訪問済みリンクの色も黒に設定 */
+  color: #000; /* 訪問済みリンクの色も黒に設定 */
 }
 
 a:hover {
   text-decoration: underline;
-  color: #555 !important; /* ホバー時に少し濃いグレー */
+  color: #555; /* ホバー時に少し濃いグレー */
 }
 
 /* ヘッダー */
@@ -149,33 +149,6 @@ a:hover {
   color: #000; /* 日付の色を薄くして控えめに */
 }
 
-/* カード内のタグのスタイリング */
-.card .tags {
-  margin-top: 15px; /* タイトルや内容との間に少し余白を追加 */
-  padding-top: 10px;
-  border-top: 1px solid #ddd; /* 上の内容と区別するために境界線を追加 */
-}
-
-.card .tags a {
-  color: #0056b3 !important; /* タグの色を青色に設定 */
-  margin-right: 10px; /* タグ間に余白を追加 */
-  text-decoration: none; /* 下線を削除 */
-}
-
-.card .tags a:hover {
-  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
-  text-decoration: underline; /* ホバー時に下線を追加 */
-}
-
-/* カード内の日付を右上に固定 */
-.card .text-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 0.9rem; /* 日付の文字サイズを調整 */
-  color: #555; /* 日付の色を少し薄くして控えめに */
-}
-
 /* カード全体のスタイル調整 */
 .card {
   position: relative;
@@ -191,40 +164,6 @@ a:hover {
   margin-bottom: 15px; /* タイトルと次の要素の間に余白を追加 */
 }
 
-/* 日付を右上に固定 */
-.card .text-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 0.9rem; /* 日付の文字サイズを調整 */
-  color: #555; /* 日付の色を少し薄くして控えめに */
-}
-
-/* カード内の内容部分 */
-.card .content {
-  flex-grow: 1; /* 残りのスペースを内容部分が占めるようにする */
-}
-
-/* タグのスタイリング */
-.card .tags {
-  margin-top: 15px; /* タグと他の内容との間に少し余白を追加 */
-  padding-top: 10px;
-  border-top: 1px solid #ddd; /* 上の内容と区別するために境界線を追加 */
-}
-
-/* タグ一覧ページのタグリンクのスタイリング */
-.tag-list a {
-  color: #0056b3 !important; /* タグの色を青色に設定 */
-  text-decoration: none; /* 下線を削除 */
-  margin-right: 5px; /* 右側に余白を追加 */
-  margin-bottom: 5px; /* 下側にも少し余白を追加 */
-  display: inline-block; /* 各タグをブロック要素として扱う */
-}
-
-.tag-list a:hover {
-  color: #0056b3 !important; /* ホバー時に少し濃い青色に変更 */
-  text-decoration: underline; /* ホバー時に下線を追加 */
-}
 
 /* スマホ表示用のスタイル */
 @media only screen and (max-width: 767px) {
@@ -246,18 +185,4 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
   }
-}
-
-/* もっと見るリンクのスタイル */
-.more-link {
-  display: inline-block;
-  margin-top: 10px;
-  color: #0056b3 !important;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.more-link:hover {
-  text-decoration: underline;
-  color: #003f7d !important;
 }

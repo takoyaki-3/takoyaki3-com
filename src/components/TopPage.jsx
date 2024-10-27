@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.svg';
-import qiitaIcon from '../assets/qiita-favicon.png';
-import zennIcon from '../assets/zenn-logo-only.svg';
-import { formatDate } from '../utils/dateUtils';
 import '../styles/TopPage.css';
+import Card from './Card'; // Import the Card component
+import { style } from '../styles/styles';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -139,11 +138,11 @@ const TopPage = () => {
   return (
     <div>
       <div className="centered-content">
-        <img 
-          alt="たこやきさんのアイコン" 
-          src={ownIcon} 
-          className="shrink mr-2" 
-          style={{ width: '80px', height: '80px' }} 
+        <img
+          alt="たこやきさんのアイコン"
+          src={ownIcon}
+          className="shrink mr-2"
+          style={{ width: '80px', height: '80px' }}
         />
       </div>
       <div className="centered-content">
@@ -162,60 +161,30 @@ const TopPage = () => {
 
       <h2>Menu</h2>
       <div className="menu-grid">
-        <a href="/tagList">
-          <div className="card">
-            <h3>タグ一覧</h3>
-            <p>Xに呟くには長い技術記事や旅行記</p>
-          </div>
-        </a>
-        <a href="/tag/作品一覧">
-          <div className="card">
-            <h3>作品一覧</h3>
-            <p>チームや個人により開発している作品やこれまでの受賞作品などを紹介</p>
-          </div>
-        </a>
-        <a href="/tag/論文">
-          <div className="card">
-            <h3>論文</h3>
-            <p>大学の卒業論文や高校時代に応募した論文</p>
-          </div>
-        </a>
-        <a href="/tag/コンテスト受賞">
-          <div className="card">
-            <h3>コンテスト受賞</h3>
-            <p>コンテスト入賞作品の記録</p>
-          </div>
-        </a>
-        <a href="/tag/登壇資料">
-          <div className="card">
-            <h3>登壇資料</h3>
-            <p>イベント等で登壇した際の資料</p>
-          </div>
-        </a>
+        {[
+          { href: "/tagList", title: "タグ一覧", description: "Xに呟くには長い技術記事や旅行記" },
+          { href: "/allPosts", title: "記事一覧", description: "ZennやQiitaを含むたこやきさんの投稿一覧" },
+          { href: "/tag/作品一覧", title: "作品一覧", description: "チームや個人により開発している作品やこれまでの受賞作品などを紹介" },
+          { href: "/tag/論文", title: "論文", description: "大学の卒業論文や高校時代に応募した論文" },
+          { href: "/tag/登壇資料", title: "登壇資料", description: "イベント等で登壇した際の資料" }
+        ].map((menu, index) => (
+          <a key={index} href={menu.href}>
+            <div className="card">
+              <h3>{menu.title}</h3>
+              <p>{menu.description}</p>
+            </div>
+          </a>
+        ))}
       </div>
 
       <h2>Recent Posts</h2>
       <div className="recent-posts">
         {recentPosts.map((post) => (
-          <a key={post.id} href={post.url} target={post.type !== 'own' ? '_blank' : '_self'} rel="noopener noreferrer">
-            <div className="card">
-              <div className="icon-container">
-                {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" className="site-icon" />}
-                {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" className="site-icon" />}
-                {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />}
-              </div>
-              <h3>{post.title}</h3>
-              <p>
-                作成日時：{formatDate(post.created)}
-                <br />
-                更新日時：{formatDate(post.updated)}
-              </p>
-            </div>
-          </a>
+          <Card key={post.id} post={post} type={'minimum'} />
         ))}
       </div>
       <div>
-        <a href="/allPosts" className="more-link">
+        <a href="/allPosts" style={style.more_link}>
           もっと見る
         </a>
       </div>
