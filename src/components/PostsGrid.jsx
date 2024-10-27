@@ -27,9 +27,9 @@ const PostsGrid = ({ posts }) => {
 
   return (
     <div style={responsiveGridStyles}>
-      {posts.map((post) => (
-        <Card post={post} />
-      ))}
+    {posts.map((post) => (
+      <Card key={post.id} post={post} />
+    ))}
     </div>
   );
 };

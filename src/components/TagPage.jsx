@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { formatDate } from '../utils/dateUtils';
+import PostsGrid from './PostsGrid';
 import '../styles/TagPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -14,7 +14,12 @@ const TagPage = () => {
         const response = await fetch(`${content_storage}/tags/${tag}.json`);
         const data = await response.json();
         data.sort((a, b) => new Date(b.created) - new Date(a.created));
-        setPages(data);
+        setPages(data.map((page) => ({
+          ...page,
+          url: `/${page.id}`,
+          type: 'own',
+          source: 'たこやきさんのつぶやき',
+        })));
       } catch (error) {
         console.error('Error fetching tag pages:', error);
       }
@@ -25,16 +30,7 @@ const TagPage = () => {
   return (
     <div className="tag">
       <h2>タグ：<a>#{tag}</a></h2>
-      <div className="tag-grid">
-        {pages.map((page) => (
-          <a key={`page-${page.id}`} href={`/${page.id}`}>
-            <div className="card">
-              <h3>{page.title}</h3>
-              <p style={{ textAlign: 'right' }}>作成日時：{formatDate(page.created)}</p>
-            </div>
-          </a>
-        ))}
-      </div>
+      <PostsGrid posts={pages} />
     </div>
   );
 };
