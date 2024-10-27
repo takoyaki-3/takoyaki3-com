@@ -12,5 +12,9 @@ const config = {
     name: "@storybook/react-vite",
     options: {},
   },
+  viteFinal: async (config) => {
+    config.build.outDir = 'dist/storybook';
+    return config;
+  },
 };
 export default config;
