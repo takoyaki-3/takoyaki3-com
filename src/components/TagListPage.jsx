@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
-const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
+import { style } from '../styles/styles';
 
-const style = {
-  heading: {
-    textAlign: 'center',
-  },
-  tag: {
-    color: '#0056b3',
-    marginRight: '5px',
-  },
-}
+const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 // タグ一覧ページコンポーネント
 const TagListPage = () => {

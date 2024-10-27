@@ -16,10 +16,6 @@ const inputStyles = {
   color: '#333',
 };
 
-const placeholderStyles = {
-  color: '#888',
-};
-
 const SearchBar = ({ searchQuery, setSearchQuery }) => {
   return (
     <div style={searchBarStyles}>

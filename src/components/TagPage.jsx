@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PostsGrid from './PostsGrid';
-import '../styles/TagPage.css';
-const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
+import { style } from '../styles/styles';
 
-const style = {
-  tag: {
-    color: '#0056b3',
-    textDecoration: 'none',
-  },
-}
+const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TagPage = () => {
   const { tag } = useParams();

@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.svg';
-import { formatDate } from '../utils/dateUtils';
 import '../styles/TopPage.css';
 import Card from './Card'; // Import the Card component
+import { style } from '../styles/styles';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
-
-const style = {
-  more_link: {
-    textAlign: 'center',
-    display: 'inline-block',
-    marginTop: '10px',
-    textDecoration: 'none',
-    fontWeight: 'bold',
-  },
-}
 
 const TopPage = () => {
   const [recentPosts, setRecentPosts] = useState([]);
