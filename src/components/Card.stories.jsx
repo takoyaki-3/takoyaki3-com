@@ -71,3 +71,13 @@ ZennArticle.args = {
     source: 'Zenn',
   },
 };
+
+// ストーリー4: Minimum版のストーリー
+export const MinimumArticle = Template.bind({});
+MinimumArticle.args = {
+  post: {
+    ...samplePost,
+    type: 'own',
+  },
+  type: 'minimum', // Minimumバージョンを指定
+};

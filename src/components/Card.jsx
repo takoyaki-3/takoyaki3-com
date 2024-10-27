@@ -59,7 +59,6 @@ const Card = ({ post, type }) => {
 
   // StypeTypeの設定
   const cardStyles = type === 'minimum' ? cardMinimumStyles : cardBaseStyles;
-  console.log('cardType:', type);
 
   return (
     <a
