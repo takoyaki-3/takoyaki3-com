@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.svg';
-import qiitaIcon from '../assets/qiita-favicon.png';
-import zennIcon from '../assets/zenn-logo-only.svg';
 import { formatDate } from '../utils/dateUtils';
 import '../styles/TopPage.css';
+import Card from './Card'; // Import the Card component
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const style = {
   more_link: {
     textAlign: 'center',
+    display: 'inline-block',
+    marginTop: '10px',
+    textDecoration: 'none',
+    fontWeight: 'bold',
   },
 }
 
@@ -187,21 +190,7 @@ const TopPage = () => {
       <h2>Recent Posts</h2>
       <div className="recent-posts">
         {recentPosts.map((post) => (
-          <a key={post.id} href={post.url} target={post.type !== 'own' ? '_blank' : '_self'} rel="noopener noreferrer">
-            <div className="card">
-              <div className="icon-container">
-                {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" className="site-icon" />}
-                {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" className="site-icon" />}
-                {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" className="site-icon" />}
-              </div>
-              <h3>{post.title}</h3>
-              <p>
-                作成日時：{formatDate(post.created)}
-                <br />
-                更新日時：{formatDate(post.updated)}
-              </p>
-            </div>
-          </a>
+          <Card key={post.id} post={post} type={'minimum'} />
         ))}
       </div>
       <div>

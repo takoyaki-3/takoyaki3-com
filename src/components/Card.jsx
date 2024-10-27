@@ -4,19 +4,23 @@ import zennIcon from '../assets/zenn-logo-only.svg';
 import ownIcon from '../assets/takoyaki3.svg';
 import { formatDate } from '../utils/dateUtils';
 
-const cardBaseStyles = {
+const cardMinimumStyles = {
   padding: '20px',
   background: 'white',
   border: '1px solid #ddd',
   borderRadius: '10px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   transition: 'box-shadow 0.3s ease',
-  minHeight: '200px',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   position: 'relative',
   textAlign: 'left',
+};
+
+const cardBaseStyles = {
+  ...cardMinimumStyles,
+  minHeight: '200px',
 };
 
 const cardHoverStyles = {
@@ -50,8 +54,12 @@ const pStyles = {
 };
 
 // カードコンポーネント
-const Card = ({ post }) => {
+const Card = ({ post, type }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // StypeTypeの設定
+  const cardStyles = type === 'minimum' ? cardMinimumStyles : cardBaseStyles;
+  console.log('cardType:', type);
 
   return (
     <a
@@ -65,7 +73,7 @@ const Card = ({ post }) => {
     >
       <div
         className="card"
-        style={{ ...cardBaseStyles, ...(isHovered ? cardHoverStyles : {}) }}
+        style={{ ...cardStyles, ...(isHovered ? cardHoverStyles : {}) }}
       >
         <div className="icon-container" style={iconContainerStyles}>
           {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" style={siteIconStyles} />}
