@@ -4,14 +4,18 @@ import { resolve } from 'path';
 import { copyFileSync } from 'fs';
 
 export default defineConfig({
-  base: '/', // デプロイするルートパスを必要に応じて設定
+  base: '/storybook/', // Storybook用のベースパス
   plugins: [
     react(),
     {
       name: 'copy-index-to-404',
-      closeBundle() {
+      buildEnd() {
         // ビルド後に index.html を 404.html にコピー
-        copyFileSync(resolve(__dirname, 'dist/index.html'), resolve(__dirname, 'dist/404.html'));
+        try {
+          copyFileSync(resolve(__dirname, 'dist/index.html'), resolve(__dirname, 'dist/404.html'));
+        } catch (error) {
+          console.error('404.html ファイルのコピーに失敗しました:', error);
+        }
       },
     },
   ],
@@ -20,7 +24,6 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        storybook: resolve(__dirname, 'dist/storybook/index.html'),
       },
     },
   },
