@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { formatDate } from '../utils/dateUtils';
 import { marked } from 'marked';
 import NotFoundPage from './NotFoundPage';
-import "../styles/ContentPage.css";
+import ContentDisplay from './ContentDisplay';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -29,15 +28,7 @@ const ContentPage = () => {
         if (pageData.type === 'md') {
           const contentResponse = await fetch(`${content_storage}/contents/${pageID}.md`);
           content = await contentResponse.text();
-          content = marked(content, {
-            highlight: (code, lang) => {
-              return (
-                '<code class="hljs">' +
-                highlight.highlightAuto(code, [lang]).value +
-                '</code>'
-              );
-            },
-          });
+          content = marked(content);
         } else if (pageData.type === 'html') {
           const contentResponse = await fetch(`${content_storage}/contents/${pageID}.html`);
           content = await contentResponse.text();
@@ -71,23 +62,7 @@ const ContentPage = () => {
   }
 
   return (
-    <div>
-      <div className="article-card">
-        <div className="text-right">
-          <p>
-            作成日時：{formatDate(page.created)}
-            <br />
-            更新日時：{formatDate(page.updated)}
-          </p>
-        </div>
-        <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
-        <div className="tags">
-          {page.tags.map((tag) => (
-            <a key={tag} href={`/tag/${tag}`}>#{tag} </a>
-          ))}
-        </div>
-      </div>
-    </div>
+    <ContentDisplay page={page} pageHTML={pageHTML} />
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/TagListPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 // タグ一覧ページコンポーネント

@@ -70,25 +70,6 @@ body {
   color: #555;
 }
 
-/* タグのスタイリング */
-.article-card .tags {
-  margin-top: 15px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
-}
-
-/* タグリンクのスタイリング */
-.tags a {
-  color: #0056b3 !important;
-  margin-right: 5px;
-  text-decoration: none;
-}
-
-.tags a:hover {
-  color: #0056b3 !important;
-  text-decoration: underline;
-}
-
 /* テーブルをラップするコンテナ */
 .table-container {
   max-width: calc(100vw - 2rem - 40px);
