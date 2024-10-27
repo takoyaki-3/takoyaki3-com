@@ -4,6 +4,13 @@ import PostsGrid from './PostsGrid';
 import '../styles/TagPage.css';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
+const style = {
+  tag: {
+    color: '#0056b3',
+    textDecoration: 'none',
+  },
+}
+
 const TagPage = () => {
   const { tag } = useParams();
   const [pages, setPages] = useState([]);
@@ -29,7 +36,7 @@ const TagPage = () => {
 
   return (
     <div className="tag">
-      <h2>タグ：<a>#{tag}</a></h2>
+      <h2>タグ：<a style={style.tag}>#{tag}</a></h2>
       <PostsGrid posts={pages} />
     </div>
   );

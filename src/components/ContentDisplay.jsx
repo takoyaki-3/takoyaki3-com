@@ -33,7 +33,6 @@ const styles = {
   tagLink: {
     color: '#0056b3',
     marginRight: '5px',
-    textDecoration: 'none',
   },
 };
 

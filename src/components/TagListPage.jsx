@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
+const style = {
+  heading: {
+    textAlign: 'center',
+  },
+  tag: {
+    color: '#0056b3',
+    marginRight: '5px',
+  },
+}
+
 // タグ一覧ページコンポーネント
 const TagListPage = () => {
   const [tags, setTags] = useState({});
@@ -22,10 +32,10 @@ const TagListPage = () => {
 
   return (
     <div>
-      <h2>タグ一覧</h2>
+      <h2 style={style.heading}>タグ一覧</h2>
       <div className="tag-list">
         {Object.keys(tags).map((tag) => (
-          <a className='tag' key={tag} href={`/tag/${tag}`}>#{tag}</a>
+          <a style={style.tag} key={tag} href={`/tag/${tag}`}>#{tag}</a>
         ))}
       </div>
     </div>
