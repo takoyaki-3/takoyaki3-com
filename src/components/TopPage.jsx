@@ -163,9 +163,9 @@ const TopPage = () => {
       <div className="menu-grid">
         {[
           { href: "/tagList", title: "タグ一覧", description: "Xに呟くには長い技術記事や旅行記" },
+          { href: "/allPosts", title: "記事一覧", description: "ZennやQiitaを含むたこやきさんの投稿一覧" },
           { href: "/tag/作品一覧", title: "作品一覧", description: "チームや個人により開発している作品やこれまでの受賞作品などを紹介" },
           { href: "/tag/論文", title: "論文", description: "大学の卒業論文や高校時代に応募した論文" },
-          { href: "/tag/コンテスト受賞", title: "コンテスト受賞", description: "コンテスト入賞作品の記録" },
           { href: "/tag/登壇資料", title: "登壇資料", description: "イベント等で登壇した際の資料" }
         ].map((menu, index) => (
           <a key={index} href={menu.href}>
