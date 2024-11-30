@@ -6,14 +6,23 @@ import { style } from '../styles/styles';
 
 const ContentDisplay = ({ page, pageHTML }) => (
   <div style={style.articleCard}>
-    <div style={style.textRight}>
-      <p>
-        作成日時：{formatDate(page.created)}
-        <br />
-        更新日時：{formatDate(page.updated)}
-      </p>
+    {/* 記事のメタ情報 */}
+    <div className="article-meta">
+      <p>作成日時：{formatDate(page.created)}</p>
+      <p>更新日時：{formatDate(page.updated)}</p>
     </div>
-    <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
+    {/* HTML埋め込みをレスポンシブ対応 */}
+    <div
+      dangerouslySetInnerHTML={{
+        __html: pageHTML.replace(
+          /<iframe .*?<\/iframe>/g,
+          (iframe) =>
+            `<div class="youtube-wrapper">${iframe}</div>`
+        ),
+      }}
+    />
+
+    {/* タグ */}
     <div style={style.tags}>
       {page.tags.map((tag) => (
         <Link key={tag} to={`/tag/${tag}`} style={style.tag} className="tag">
