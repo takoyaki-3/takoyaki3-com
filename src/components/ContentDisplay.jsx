@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
-import "../styles/ContentPage.css";
+import '../styles/ContentPage.css';
 import { style } from '../styles/styles';
 
 const ContentDisplay = ({ page, pageHTML }) => (
@@ -15,14 +16,9 @@ const ContentDisplay = ({ page, pageHTML }) => (
     <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
     <div style={style.tags}>
       {page.tags.map((tag) => (
-        <a
-          key={tag}
-          href={`/tag/${tag}`}
-          style={style.tag}
-          className='tag'
-        >
+        <Link key={tag} to={`/tag/${tag}`} style={style.tag} className="tag">
           #{tag}{' '}
-        </a>
+        </Link>
       ))}
     </div>
   </div>

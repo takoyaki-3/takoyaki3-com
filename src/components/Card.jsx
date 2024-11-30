@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
 import ownIcon from '../assets/takoyaki3.svg';
@@ -53,39 +54,53 @@ const pStyles = {
   textAlign: 'right',
 };
 
-// カードコンポーネント
 const Card = ({ post, type }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // StypeTypeの設定
   const cardStyles = type === 'minimum' ? cardMinimumStyles : cardBaseStyles;
 
-  return (
+  const isInternalLink = post.type === 'own';
+
+  const cardContent = (
+    <div
+      className="card"
+      style={{ ...cardStyles, ...(isHovered ? cardHoverStyles : {}) }}
+    >
+      <div className="icon-container" style={iconContainerStyles}>
+        {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" style={siteIconStyles} />}
+        {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" style={siteIconStyles} />}
+        {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" style={siteIconStyles} />}
+      </div>
+      <h3 style={{ ...h3Styles, ...(isHovered ? h3HoverStyles : {}) }}>{post.title}</h3>
+      <p style={pStyles}>
+        作成日時：{formatDate(post.created)}
+        <br />
+        更新日時：{formatDate(post.updated)}
+      </p>
+    </div>
+  );
+
+  return isInternalLink ? (
+    <Link
+      key={post.id}
+      to={post.url}
+      style={{ textDecoration: 'none', color: 'inherit' }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {cardContent}
+    </Link>
+  ) : (
     <a
       key={post.id}
       href={post.url}
-      target={post.type !== 'own' ? '_blank' : '_self'}
+      target="_blank"
       rel="noopener noreferrer"
       style={{ textDecoration: 'none', color: 'inherit' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div
-        className="card"
-        style={{ ...cardStyles, ...(isHovered ? cardHoverStyles : {}) }}
-      >
-        <div className="icon-container" style={iconContainerStyles}>
-          {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" style={siteIconStyles} />}
-          {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" style={siteIconStyles} />}
-          {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" style={siteIconStyles} />}
-        </div>
-        <h3 style={{ ...h3Styles, ...(isHovered ? h3HoverStyles : {}) }}>{post.title}</h3>
-        <p style={pStyles}>
-          作成日時：{formatDate(post.created)}
-          <br />
-          更新日時：{formatDate(post.updated)}
-        </p>
-      </div>
+      {cardContent}
     </a>
   );
 };
