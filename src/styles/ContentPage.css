@@ -194,3 +194,14 @@ img {
     height: auto;
   }
 }
+
+/* 記事のメタ情報（作成日時・更新日時） */
+.article-meta {
+  position: relative;
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.article-meta p {
+  margin: 0;
+}
