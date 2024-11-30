@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.svg';
 import '../styles/TopPage.css';
-import Card from './Card'; // Import the Card component
+import Card from './Card';
 import { style } from '../styles/styles';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
@@ -122,7 +123,6 @@ const TopPage = () => {
         const qiitaArticles = await fetchQiitaArticles();
         const zennArticles = await fetchZennArticles();
 
-        // 全ての記事をマージして日付でソート
         const allArticles = [...ownArticles, ...qiitaArticles, ...zennArticles];
         allArticles.sort((a, b) => new Date(b.created) - new Date(a.created));
 
@@ -147,14 +147,21 @@ const TopPage = () => {
       </div>
       <div className="centered-content">
         {sns.map((s, i) => (
-          <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="subheading mx-3">
+          <a
+            key={i}
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="subheading mx-3"
+          >
             <img src={s.icon} alt={s.text} width="30px" />
           </a>
         ))}
       </div>
       <div className="text-center">
         <p>
-          こんにちは、世界！<br />
+          こんにちは、世界！
+          <br />
           たこやきさんです。ITと交通が大好きです。
         </p>
       </div>
@@ -162,18 +169,22 @@ const TopPage = () => {
       <h2>Menu</h2>
       <div className="menu-grid">
         {[
-          { href: "/tagList", title: "タグ一覧", description: "Xに呟くには長い技術記事や旅行記" },
-          { href: "/allPosts", title: "記事一覧", description: "ZennやQiitaを含むたこやきさんの投稿一覧" },
-          { href: "/tag/作品一覧", title: "作品一覧", description: "チームや個人により開発している作品やこれまでの受賞作品などを紹介" },
-          { href: "/tag/論文", title: "論文", description: "大学の卒業論文や高校時代に応募した論文" },
-          { href: "/tag/登壇資料", title: "登壇資料", description: "イベント等で登壇した際の資料" }
+          { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
+          { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
+          {
+            to: '/tag/作品一覧',
+            title: '作品一覧',
+            description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
+          },
+          { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
+          { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
         ].map((menu, index) => (
-          <a key={index} href={menu.href}>
+          <Link key={index} to={menu.to}>
             <div className="card">
               <h3>{menu.title}</h3>
               <p>{menu.description}</p>
             </div>
-          </a>
+          </Link>
         ))}
       </div>
 
@@ -184,9 +195,9 @@ const TopPage = () => {
         ))}
       </div>
       <div>
-        <a href="/allPosts" style={style.more_link}>
+        <Link to="/allPosts" style={style.more_link}>
           もっと見る
-        </a>
+        </Link>
       </div>
       <div>
         <h2>X Timeline</h2>

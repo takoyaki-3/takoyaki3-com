@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Routes, Route, useNavigate, useSearchParams } from 'react-router-dom';
+import { Routes, Route, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import './App.css';
 import TopPage from './components/TopPage';
 import TagPage from './components/TagPage';
@@ -38,12 +38,12 @@ function App() {
   return (
     <>
       <header className="app-header">
-        <a href="/">
-          <img src={logo} className="header-logo" alt="App Logo"/>
-        </a>
-        <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
+        <Link to="/">
+          <img src={logo} className="header-logo" alt="App Logo" />
+        </Link>
+        <Link to="/" style={{ textDecoration: 'none', color: 'white' }}>
           <h2 style={{ color: 'white' }}>たこやきさんのつぶやき</h2>
-        </a>
+        </Link>
         <div className="github-link">
           <a
             href="https://github.com/takoyaki-3/takoyaki3-com"
