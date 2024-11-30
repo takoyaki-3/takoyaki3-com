@@ -13,7 +13,16 @@ const ContentDisplay = ({ page, pageHTML }) => (
         更新日時：{formatDate(page.updated)}
       </p>
     </div>
-    <div dangerouslySetInnerHTML={{ __html: pageHTML }} />
+    {/* HTML埋め込みをレスポンシブ対応 */}
+    <div
+      dangerouslySetInnerHTML={{
+        __html: pageHTML.replace(
+          /<iframe .*?<\/iframe>/g,
+          (iframe) =>
+            `<div class="youtube-wrapper">${iframe}</div>`
+        ),
+      }}
+    />
     <div style={style.tags}>
       {page.tags.map((tag) => (
         <Link key={tag} to={`/tag/${tag}`} style={style.tag} className="tag">
