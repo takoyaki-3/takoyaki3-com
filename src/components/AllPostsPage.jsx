@@ -88,7 +88,7 @@ const AllPostsPage = () => {
     fetchAllArticles();
   }, []);
 
-  const filteredArticles = allArticles.filter(post =>
+  const filteredArticles = allArticles.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

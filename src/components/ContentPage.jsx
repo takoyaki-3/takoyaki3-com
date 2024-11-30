@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { marked } from 'marked';
 import NotFoundPage from './NotFoundPage';
 import ContentDisplay from './ContentDisplay';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
-// コンテンツページコンポーネント
 const ContentPage = () => {
   const { pageID } = useParams();
   const [page, setPage] = useState({ tags: [] });
@@ -54,16 +53,21 @@ const ContentPage = () => {
         wrapper.appendChild(table);
       }
     });
+
+    // 記事内のタグリンクをSPA対応に変更
+    const tagLinks = document.querySelectorAll('.tag a');
+    tagLinks.forEach((link) => {
+      link.onclick = (e) => {
+        e.preventDefault();
+      };
+    });
   }, [pageHTML]);
 
-  // ページが存在しない場合は404ページを表示
   if (!pageExists) {
     return <NotFoundPage />;
   }
 
-  return (
-    <ContentDisplay page={page} pageHTML={pageHTML} />
-  );
+  return <ContentDisplay page={page} pageHTML={pageHTML} />;
 };
 
 export default ContentPage;
