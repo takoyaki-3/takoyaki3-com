@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.takoyaki3.twa",
+        "sha256_cert_fingerprints": ["2D:A6:74:7F:0E:50:8A:8C:A3:21:1C:7A:13:16:D4:C5:3B:08:44:D3:85:F2:9B:FB:FC:0C:4B:B3:9B:B1:D8:74"]
+      }
+    }]
