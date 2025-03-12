@@ -6,6 +6,21 @@ import ContentDisplay from './ContentDisplay';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
+// マークダウンレンダラーのオプション設定
+marked.setOptions({
+  breaks: true, // 改行を有効にする
+  gfm: true, // GitHub Flavored Markdownを有効にする
+});
+
+// 画像のレスポンシブ対応のためのレンダラーカスタマイズ
+const renderer = new marked.Renderer();
+const originalImageRenderer = renderer.image;
+renderer.image = function(href, title, text) {
+  const img = originalImageRenderer.call(this, href, title, text);
+  // 画像タグにクラスを追加
+  return img.replace('<img', '<img class="responsive-image"');
+};
+
 const ContentPage = () => {
   const { pageID } = useParams();
   const [page, setPage] = useState({ tags: [] });
@@ -13,6 +28,19 @@ const ContentPage = () => {
   const [pageExists, setPageExists] = useState(true);
 
   useEffect(() => {
+    // ビューポートの設定を追加（モバイル表示の最適化）
+    const setViewportMeta = () => {
+      let viewport = document.querySelector('meta[name="viewport"]');
+      if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        document.head.appendChild(viewport);
+      }
+      viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0';
+    };
+
+    setViewportMeta();
+
     const fetchContent = async () => {
       try {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
@@ -27,7 +55,8 @@ const ContentPage = () => {
         if (pageData.type === 'md') {
           const contentResponse = await fetch(`${content_storage}/contents/${pageID}.md`);
           content = await contentResponse.text();
-          content = marked(content);
+          // カスタムレンダラーを使用
+          content = marked(content, { renderer });
         } else if (pageData.type === 'html') {
           const contentResponse = await fetch(`${content_storage}/contents/${pageID}.html`);
           content = await contentResponse.text();
