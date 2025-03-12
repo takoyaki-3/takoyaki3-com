@@ -335,3 +335,14 @@ img.large-image {
 .article-meta p {
   margin: 0;
 }
+
+.content-html pre, .content-html code {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 14px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

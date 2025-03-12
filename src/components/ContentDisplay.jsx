@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
 import '../styles/ContentPage.css';
 import { style } from '../styles/styles';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-okaidia.css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-markup';
 
 const ContentDisplay = ({ page, pageHTML }) => {
   useEffect(() => {
@@ -49,10 +54,18 @@ const ContentDisplay = ({ page, pageHTML }) => {
       });
     };
 
-    // 画像の最適化を実行
+    const addLanguageClasses = () => {
+      const codeBlocks = document.querySelectorAll('.content-html pre > code');
+      codeBlocks.forEach(codeBlock => {
+        const language = codeBlock.className.match(/language-(\w+)/)?.[1] || 'javascript';
+        codeBlock.classList.add(`language-${language}`);
+      });
+      Prism.highlightAll();
+    };
+
     optimizeImages();
-    // インライン要素の最適化を実行
     optimizeInlineElements();
+    addLanguageClasses();
   }, [pageHTML]);
 
   // HTML内の画像タグを処理して最適化
