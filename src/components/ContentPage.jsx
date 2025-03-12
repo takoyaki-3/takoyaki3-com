@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { marked } from 'marked';
 import NotFoundPage from './NotFoundPage';
 import ContentDisplay from './ContentDisplay';
+import LoadingSpinner from './LoadingSpinner';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
@@ -26,6 +27,7 @@ const ContentPage = () => {
   const [page, setPage] = useState({ tags: [] });
   const [pageHTML, setPageHTML] = useState('');
   const [pageExists, setPageExists] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // ビューポートの設定を追加（モバイル表示の最適化）
@@ -42,10 +44,12 @@ const ContentPage = () => {
     setViewportMeta();
 
     const fetchContent = async () => {
+      setIsLoading(true);
       try {
         const pageDataResponse = await fetch(`${content_storage}/contents/${pageID}.json`);
         if (!pageDataResponse.ok) {
           setPageExists(false);
+          setIsLoading(false);
           return;
         }
         const pageData = await pageDataResponse.json();
@@ -65,6 +69,8 @@ const ContentPage = () => {
       } catch (error) {
         console.error('Error fetching content:', error);
         setPageExists(false);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -91,6 +97,15 @@ const ContentPage = () => {
       };
     });
   }, [pageHTML]);
+
+  if (!pageExists) {
+    return <NotFoundPage />;
+  }
+
+  // ローディング中はLoadingSpinnerを表示
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   if (!pageExists) {
     return <NotFoundPage />;
