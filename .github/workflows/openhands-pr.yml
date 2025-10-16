@@ -68,8 +68,8 @@ jobs:
           echo "goal=$GOAL" >> "$GITHUB_OUTPUT"
           echo "maxmin=$MAX_MIN" >> "$GITHUB_OUTPUT"
 
-      - name: Show goal
-        run: echo "OpenHands goal => ${{ steps.prep.outputs.goal }} (max ${{ steps.prep.outputs.maxmin }} min)"
+      # - name: Show goal
+      #   run: echo "OpenHands goal => ${{ steps.prep.outputs.goal }} (max ${{ steps.prep.outputs.maxmin }} min)"
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
