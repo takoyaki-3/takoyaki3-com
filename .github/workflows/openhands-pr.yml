@@ -23,9 +23,18 @@ permissions:
 jobs:
   run-agent:
     if: |
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/openhands pr'))
+      (github.event_name == 'workflow_dispatch') ||
+      (
+        github.event_name == 'issue_comment' &&
+        startsWith(github.event.comment.body, '/openhands pr') &&
+        (
+          github.event.comment.author_association == 'MEMBER' ||
+          github.event.comment.author_association == 'OWNER' ||
+          github.event.comment.author_association == 'COLLABORATOR'
+        )
+      )
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -37,13 +46,18 @@ jobs:
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            GOAL=${{ github.event.inputs.goal }}
-            MAX_MIN=${{ github.event.inputs.max_minutes }}
+            GOAL="${{ github.event.inputs.goal }}"
+            MAX_MIN="${{ github.event.inputs.max_minutes }}"
           else
-            # Strip the command prefix `/openhands pr` and trim spaces
+            # Strip the command prefix `/openhands pr` and trim spaces robustly
             RAW="${{ github.event.comment.body }}"
-            GOAL=$(echo "$RAW" | sed -E 's#^/openhands[[:space:]]+pr[[:space:]]*##' | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
-            MAX_MIN=15
+            GOAL="$(
+              printf '%s' "$RAW" \
+                | sed -E 's#^/openhands[[:space:]]+pr[[:space:]]*##' \
+                | sed -E 's/^[[:space:]]+//' \
+                | sed -E 's/[[:space:]]+$//'
+            )"
+            MAX_MIN="15"
           fi
 
           if [ -z "$GOAL" ]; then
@@ -51,18 +65,17 @@ jobs:
             exit 1
           fi
 
-          echo "goal=$GOAL" >> $GITHUB_OUTPUT
-          echo "maxmin=$MAX_MIN" >> $GITHUB_OUTPUT
+          echo "goal=$GOAL" >> "$GITHUB_OUTPUT"
+          echo "maxmin=$MAX_MIN" >> "$GITHUB_OUTPUT"
 
       - name: Show goal
-        run: echo "OpenHands goal => ${{ steps.prep.outputs.goal }} (max ${'${{ steps.prep.outputs.maxmin }}'} min)"
+        run: echo "OpenHands goal => ${{ steps.prep.outputs.goal }} (max ${{ steps.prep.outputs.maxmin }} min)"
 
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
       - name: Pull OpenHands image
-        run: |
-          docker pull ghcr.io/all-hands-ai/openhands:latest
+        run: docker pull ghcr.io/all-hands-ai/openhands:latest
 
       - name: Run OpenHands (Gemini)
         env:
@@ -70,13 +83,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOAL: ${{ steps.prep.outputs.goal }}
           MAX_MIN: ${{ steps.prep.outputs.maxmin }}
+        shell: bash
         run: |
           if [ -z "$GOOGLE_API_KEY" ]; then
             echo "Missing secret GEMINI_API_KEY" >&2
             exit 1
           fi
           # Run OpenHands container mounting the repo; flags may vary across versions.
-          # Adjust the command if your OpenHands version uses different CLI args.
           docker run --rm \
             -v "$PWD":/workspace \
             -e GOOGLE_API_KEY \
@@ -90,6 +103,7 @@ jobs:
               --goal "$GOAL" || true
 
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           title: "OpenHands: ${{ steps.prep.outputs.goal }}"
@@ -103,24 +117,15 @@ jobs:
             ${{ steps.prep.outputs.goal }}
 
       - name: React on PR creation
-        if: github.event_name == 'issue_comment'
+        if: github.event_name == 'issue_comment' && steps.cpr.outputs.pull-request-number
         uses: actions/github-script@v7
         env:
           GOAL: ${{ steps.prep.outputs.goal }}
         with:
           script: |
-            const core = require('@actions/core');
-            const { data: prs } = await github.repos.listPullRequestsAssociatedWithCommit({
+            await github.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              commit_sha: context.sha,
-            });
-            if (prs && prs.length) {
-              const pr = prs[0];
-              await github.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.issue.number,
-                body: `Opened PR #${pr.number} for goal: ${process.env.GOAL || ''}`
-              });
-            }
+              issue_number: context.payload.issue.number,
+              body: `Opened PR #${{ steps.cpr.outputs['pull-request-number'] }} for goal: ${process.env.GOAL || ''}`
+            })
