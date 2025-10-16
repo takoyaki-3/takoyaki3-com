@@ -89,12 +89,14 @@ jobs:
             echo "Missing secret GEMINI_API_KEY" >&2
             exit 1
           fi
-          # Run OpenHands container mounting the repo; flags may vary across versions.
           docker run --rm \
             -v "$PWD":/workspace \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            --add-host host.docker.internal:host-gateway \
             -e GOOGLE_API_KEY \
             -e GITHUB_TOKEN \
             ghcr.io/all-hands-ai/openhands:latest \
+            openhands run \
               --workspace /workspace \
               --llm-provider gemini \
               --model gemini-2.5-pro \
