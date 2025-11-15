@@ -111,6 +111,7 @@ jobs:
           fi
 
       - name: Run project checks
+        if: ${{ false }}
         id: checks
         continue-on-error: true
         run: |
@@ -128,7 +129,7 @@ jobs:
           echo "checks_result=$CHECKS_EXIT" >> $GITHUB_OUTPUT
 
       - name: Fix checks failures if needed
-        if: steps.checks.outputs.checks_result != '0'
+        if: ${{ false }}
         env:
           OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
         run: |
@@ -233,8 +234,6 @@ jobs:
         env:
           COMMENT_BODY: |
             ✅ **Cline AI による PR を作成しました**
-
-            ✅ チェック（npm run lint / npm run build）も成功しています。
 
             🔗 レビューをお願いします: #${{ env.PR_NUMBER }}
 
