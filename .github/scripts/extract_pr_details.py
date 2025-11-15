@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Cline AI の出力から PR タイトルと本文を抽出するスクリプト。
+
+- `<PR_TITLE>...</PR_TITLE>` / `<PR_BODY>...</PR_BODY>` を優先して利用
+- タグが入れ子になっている場合は、一番「深い」側（後ろ側）のタグ内テキストを採用
 """
 import re
 import sys
@@ -39,28 +42,76 @@ def _is_weak_body(text: str) -> bool:
     return False
 
 
+def _normalize_body(text: str) -> str:
+    """
+    本文内の余計な空行や末尾の空白を整形する。
+    行数・文字数は基本的に制限しない（ユーザーの指示優先）。
+    """
+    if not text:
+        return ""
+
+    lines = [line.rstrip() for line in text.splitlines()]
+
+    # 先頭・末尾の空行を削除
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+
+    # 連続する空行は 1 行に圧縮
+    compressed = []
+    blank = False
+    for line in lines:
+        if line.strip():
+            compressed.append(line)
+            blank = False
+        else:
+            if not blank:
+                compressed.append("")
+                blank = True
+
+    return "\n".join(compressed).rstrip()
+
+
+def _extract_deepest_tag_content(input_text: str, tag_name: str) -> str:
+    """
+    指定タグの内容をすべて抽出し、そのうち「一番深い」とみなせる最後のマッチを返す。
+
+    例:
+      <PR_BODY>outer <PR_BODY>inner</PR_BODY></PR_BODY>
+    の場合、inner が採用される。
+    """
+    pattern = rf"<\s*{tag_name}\s*>(.*?)<\s*/\s*{tag_name}\s*>"
+    matches = list(
+        re.finditer(pattern, input_text, flags=re.DOTALL | re.IGNORECASE)
+    )
+    if not matches:
+        return ""
+
+    # 最後のマッチ（もっとも「内側」とみなせるもの）を使う
+    for match in reversed(matches):
+        content = match.group(1).strip()
+        if content:
+            return content
+    # すべて空白の場合は最後のもの
+    return matches[-1].group(1).strip()
+
+
 def extract_pr_details(input_text: str, title_file: str, body_file: str) -> None:
     """
     標準入力から受け取ったテキストから PR のタイトルと本文を抽出する。
 
-    想定フォーマット（タグは大文字/小文字やスペースの有無は許容）:
-      <PR_TITLE>Title text</PR_TITLE>
-      <PR_BODY>Body text</PR_BODY>
-
-    フォールバック: タグが見つからない場合は '---' で前後を分割して使用する。
+    優先順位:
+      1. 最も内側の <PR_TITLE>/<PR_BODY> タグの内容
+      2. なければ '---' で分割した前半/後半
+      3. それでも弱すぎる本文の場合は、タグ行を除いた全文
+      4. 最後の最後は定型文
     """
-    tag_flags = re.DOTALL | re.IGNORECASE
-    title_match = re.search(
-        r"<\s*PR_TITLE\s*>(.*?)<\s*/\s*PR_TITLE\s*>", input_text, tag_flags
-    )
-    body_match = re.search(
-        r"<\s*PR_BODY\s*>(.*?)<\s*/\s*PR_BODY\s*>", input_text, tag_flags
-    )
+    # 1. ネスト対応: 最も内側のタグから抽出
+    title = _extract_deepest_tag_content(input_text, "PR_TITLE")
+    body = _extract_deepest_tag_content(input_text, "PR_BODY")
 
-    title = title_match.group(1).strip() if title_match else ""
-    body = body_match.group(1).strip() if body_match else ""
-
-    # タグが無い／片方だけのときにも使えるように、汎用フォールバックを一度計算しておく。
+    # 2. フォールバック用に '---' で分割
     parts = input_text.split("---", 1)
     if len(parts) >= 2:
         fallback_title = parts[0].strip()
@@ -69,13 +120,12 @@ def extract_pr_details(input_text: str, title_file: str, body_file: str) -> None
         fallback_title = ""
         fallback_body = input_text.strip()
 
-    # タイトル／本文のどちらかが空ならフォールバックを使う。
     if not title:
         title = fallback_title
     if not body:
         body = fallback_body
 
-    # 本文が明らかに弱い（例: 「と」）場合は、よりマシな候補を探す。
+    # 3. 本文が明らかに弱い（例: 「と」）場合は、よりマシな候補を探す。
     if _is_weak_body(body):
         candidate = fallback_body
         if _is_weak_body(candidate):
@@ -90,14 +140,17 @@ def extract_pr_details(input_text: str, title_file: str, body_file: str) -> None
         if not _is_weak_body(candidate):
             body = candidate
 
-    # まだ弱い場合は完全にフォールバックの定型文にする。
+    # 4. まだ弱い場合は完全にフォールバックの定型文にする。
     if _is_weak_body(body):
         body = (
             "このPRはAIによって自動生成されましたが、"
             "本文の抽出に失敗した可能性があります。コミットメッセージや diff を確認してください。"
         )
 
-    # タイトルも弱い場合は、本文の先頭行から拾うか、最後の最後でデフォルトタイトルを使う。
+    # 本文の軽い整形（空行圧縮など）
+    body = _normalize_body(body)
+
+    # タイトルが弱い場合は、本文の先頭行から拾うか、最後にデフォルトタイトルを使う。
     if _is_weak_title(title):
         candidate = ""
         for line in body.splitlines():
