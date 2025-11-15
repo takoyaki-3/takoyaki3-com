@@ -1,0 +1,290 @@
+name: AI Coding from Issue with Cline
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  ai-coding:
+    if: contains(github.event.issue.labels.*.name, 'cline-coding')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'node'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Cline CLI
+        run: |
+          npm install -g cline
+          cline version
+
+      - name: Create feature branch (human-readable & unique)
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          RUN_ID="${{ github.run_id }}"
+
+          # タイトルをある程度安全な ASCII に変換（失敗した場合は元の文字列を使用）
+          SAFE_TITLE=$(echo "$ISSUE_TITLE" | iconv -f UTF-8 -t ASCII//TRANSLIT 2>/dev/null || echo "$ISSUE_TITLE")
+
+          # 小文字に変換
+          SAFE_TITLE=$(echo "$SAFE_TITLE" | tr '[:upper:]' '[:lower:]')
+
+          # 英数字以外を "-" に置き換え
+          SAFE_TITLE=$(echo "$SAFE_TITLE" | sed 's/[^a-z0-9]/-/g')
+
+          # 連続した "-" を 1 つにまとめる
+          SAFE_TITLE=$(echo "$SAFE_TITLE" | sed 's/-\+/-/g')
+
+          # 先頭と末尾の "-" を削除
+          SAFE_TITLE=$(echo "$SAFE_TITLE" | sed 's/^-//' | sed 's/-$//')
+
+          # 長すぎる場合は 40 文字に切り詰め
+          SAFE_TITLE=$(echo "$SAFE_TITLE" | cut -c1-40)
+
+          # 最終的に空になった場合のフォールバック
+          if [ -z "$SAFE_TITLE" ]; then
+            SAFE_TITLE="update"
+          fi
+
+          BRANCH_NAME="ai-fix-issue-${ISSUE_NUM}-${SAFE_TITLE}-run-${RUN_ID}"
+
+          echo "Using branch name: $BRANCH_NAME"
+
+          git config user.name "Cline AI Bot"
+          git config user.email "cline-bot@github.com"
+          git checkout -b "$BRANCH_NAME"
+
+          # 後続ステップ用に環境変数へエクスポート
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Run Cline AI Coding
+        env:
+          OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          cline auth --provider "openrouter" --apikey "$OPEN_ROUTER_API_KEY" --modelid "openai/gpt-5.1" || true
+
+          echo "Issue #${{ github.event.issue.number }}: " > /tmp/prompt.txt
+          printf '%s\n' "$ISSUE_TITLE" >> /tmp/prompt.txt
+          echo "" >> /tmp/prompt.txt
+          printf '%s\n' "$ISSUE_BODY" >> /tmp/prompt.txt
+          echo "" >> /tmp/prompt.txt
+          echo "プロジェクトルール（.clinerules など）:" >> /tmp/prompt.txt
+          echo "- 変更箇所には必要に応じてテストコード（または Storybook）を追加・更新すること" >> /tmp/prompt.txt
+          echo "- タスク完了後は npm run lint / npm run build を実行し、エラーのない状態にすること" >> /tmp/prompt.txt
+          echo "" >> /tmp/prompt.txt
+          echo "作業方針:" >> /tmp/prompt.txt
+          echo "- コードの意図を読み取りつつ、安全に変更を加えること" >> /tmp/prompt.txt
+          echo "- 既存コードのスタイル・構成に合わせること" >> /tmp/prompt.txt
+          echo "- 可能な範囲で丁寧なエラーハンドリングを行うこと" >> /tmp/prompt.txt
+          echo "- 必要に応じてテストやビルドの実行方法も更新すること" >> /tmp/prompt.txt
+
+          if ! cline -y -m act < /tmp/prompt.txt; then
+            echo "Cline が一度失敗したため、数秒待ってから再試行します..."
+            sleep 5
+            cline -y -m act < /tmp/prompt.txt
+          fi
+
+      - name: Run project checks
+        id: checks
+        continue-on-error: true
+        run: |
+          npm run lint
+          LINT_EXIT=$?
+          npm run build
+          BUILD_EXIT=$?
+
+          if [ "$LINT_EXIT" -ne 0 ] || [ "$BUILD_EXIT" -ne 0 ]; then
+            CHECKS_EXIT=1
+          else
+            CHECKS_EXIT=0
+          fi
+
+          echo "checks_result=$CHECKS_EXIT" >> $GITHUB_OUTPUT
+
+      - name: Fix checks failures if needed
+        if: steps.checks.outputs.checks_result != '0'
+        env:
+          OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
+        run: |
+          echo "npm run lint / npm run build でエラーが発生しました。Cline に修正を依頼します..." > /tmp/fix_prompt.txt
+          echo "" >> /tmp/fix_prompt.txt
+          echo "次の方針で問題を修正してください:" >> /tmp/fix_prompt.txt
+          echo "- npm run lint の出力を確認" >> /tmp/fix_prompt.txt
+          echo "- npm run build の出力を確認" >> /tmp/fix_prompt.txt
+          echo "- エラーの原因を特定し、必要なコード修正とテストコードの補完を行う" >> /tmp/fix_prompt.txt
+          echo "- 修正後に npm run lint / npm run build が成功することを確認" >> /tmp/fix_prompt.txt
+
+          cline -y -m act < /tmp/fix_prompt.txt
+          npm run lint
+          npm run build
+
+      - name: Commit and push changes
+        id: commit
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add .
+
+            echo "現在の変更内容（git diff --staged）と Issue のタイトルをもとに、Conventional Commits 形式の分かりやすいコミットメッセージを生成してください。" > /tmp/commit_prompt.txt
+            echo "" >> /tmp/commit_prompt.txt
+            echo "## 要件" >> /tmp/commit_prompt.txt
+            echo "- 1行目は 'type: subject' 形式で 50 文字以内" >> /tmp/commit_prompt.txt
+            echo "- 2行目は空行とする" >> /tmp/commit_prompt.txt
+            echo "- 3行目以降に詳細な説明を書く" >> /tmp/commit_prompt.txt
+            echo "- 必ず <COMMIT_MESSAGE> と </COMMIT_MESSAGE> タグの間にコミットメッセージ全文を出力すること" >> /tmp/commit_prompt.txt
+            echo "" >> /tmp/commit_prompt.txt
+            echo "## Issue タイトル" >> /tmp/commit_prompt.txt
+            printf '%s\n' "$ISSUE_TITLE" >> /tmp/commit_prompt.txt
+            echo "" >> /tmp/commit_prompt.txt
+            echo "## 変更内容" >> /tmp/commit_prompt.txt
+            git diff --staged >> /tmp/commit_prompt.txt
+
+            cline -y -m act < /tmp/commit_prompt.txt > /tmp/raw_commit_msg.txt
+
+            # <COMMIT_MESSAGE> タグの中身のみ抽出
+            sed -n '/<COMMIT_MESSAGE>/,/<\/COMMIT_MESSAGE>/p' /tmp/raw_commit_msg.txt | sed 's/<COMMIT_MESSAGE>//;s/<\/COMMIT_MESSAGE>//' > /tmp/ai_commit_msg.txt
+
+            git commit -F /tmp/ai_commit_msg.txt
+
+            # feature ブランチを push
+            git push origin "$BRANCH_NAME"
+
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "変更はありません"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate PR title and body
+        if: steps.commit.outputs.has_changes == 'true'
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          echo "以下の情報をもとに、分かりやすい Pull Request のタイトルと本文を日本語で生成してください。" > /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+          echo "## 要件" >> /tmp/pr_prompt.txt
+          echo "- タイトルは 'feat: ...' / 'fix: ...' などの形式で、要点が分かるようにする" >> /tmp/pr_prompt.txt
+          echo "- 本文には対応した Issue 番号、変更内容の概要、テスト結果などを含める" >> /tmp/pr_prompt.txt
+          echo "- タイトルは <PR_TITLE> と </PR_TITLE> の間に出力する" >> /tmp/pr_prompt.txt
+          echo "- 本文は <PR_BODY> と </PR_BODY> の間に出力する" >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+          echo "## Issue" >> /tmp/pr_prompt.txt
+          echo "#${{ github.event.issue.number }}: " >> /tmp/pr_prompt.txt
+          printf '%s\n' "$ISSUE_TITLE" >> /tmp/pr_prompt.txt
+          printf '%s\n' "$ISSUE_BODY" >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+          echo "## コミットメッセージ" >> /tmp/pr_prompt.txt
+          cat /tmp/ai_commit_msg.txt >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+          echo "## 変更差分" >> /tmp/pr_prompt.txt
+          git diff origin/main...HEAD >> /tmp/pr_prompt.txt
+
+          cline -y -m act < /tmp/pr_prompt.txt | python .github/scripts/extract_pr_details.py /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt
+
+      - name: Create Pull Request
+        if: steps.commit.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PR_TITLE=$(cat /tmp/ai_pr_title.txt)
+
+          gh pr create \
+            --title "$PR_TITLE" \
+            --body-file /tmp/ai_pr_body.txt \
+            --base main \
+            --head "$BRANCH_NAME" \
+            --label "ai-generated" \
+            --label "needs-review"
+
+          PR_NUMBER=$(gh pr list --head "$BRANCH_NAME" --json number --jq '.[0].number')
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+
+      - name: Comment on Issue (Success)
+        if: success() && steps.commit.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            ✅ **Cline AI による PR を作成しました**
+
+            ✅ チェック（npm run lint / npm run build）も成功しています。
+
+            🔗 レビューをお願いします: #${{ env.PR_NUMBER }}
+
+            ---
+            Generated by [Cline](https://cline.bot)
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+
+      - name: Comment on Issue (Failure)
+        if: failure()
+        uses: actions/github-script@v7
+        env:
+          COMMENT_BODY: |
+            ❌ **Cline AI による自動対応でエラーが発生しました**
+
+            エラーの詳細は [Actions ログ](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) を確認してください。
+
+            考えられる原因:
+            - Issue の内容が不十分
+            - 依存関係やビルド設定の問題
+            - API レート制限
+            - テストまたはビルドの失敗
+
+            必要に応じて手動で対応をお願いします。
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: process.env.COMMENT_BODY
+            })
+
+      - name: Add labels to Issue
+        if: success() && steps.commit.outputs.has_changes == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['ai-processed']
+            })
