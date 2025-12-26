@@ -183,35 +183,70 @@ jobs:
             echo "has_changes=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Generate PR title and body
+      # ★ここを差し替え：Clineの標準出力から抽出しない。Clineがファイルを作る。
+      - name: Generate PR title and body (Cline writes files)
         if: steps.commit.outputs.has_changes == 'true'
         env:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
+          rm -f /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt
+
           echo "以下の情報をもとに、分かりやすい Pull Request のタイトルと本文を日本語で生成してください。" > /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
-          echo "## 要件" >> /tmp/pr_prompt.txt
-          echo "- タイトルは 'feat: ...' / 'fix: ...' などの形式で、要点が分かるようにする" >> /tmp/pr_prompt.txt
-          echo "- 本文には対応した Issue 番号、変更内容の概要、テスト結果などを含める" >> /tmp/pr_prompt.txt
-          echo "- タイトルは <PR_TITLE> と </PR_TITLE> の間に出力する" >> /tmp/pr_prompt.txt
-          echo "- 本文は <PR_BODY> と </PR_BODY> の間に出力する" >> /tmp/pr_prompt.txt
+
+          echo "## 最重要要件（必ず守る）" >> /tmp/pr_prompt.txt
+          echo "- PRタイトルは **/tmp/ai_pr_title.txt** に **1行のみ**で保存すること（余計な行は禁止）" >> /tmp/pr_prompt.txt
+          echo "- PR本文は **/tmp/ai_pr_body.txt** に Markdown で保存すること" >> /tmp/pr_prompt.txt
+          echo "- 2ファイルは上書き作成してよい" >> /tmp/pr_prompt.txt
+          echo "- 2ファイルの書き込みが完了したら、標準出力には次の1行だけを出す: PR_FILES_WRITTEN" >> /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
+
+          echo "## タイトル要件" >> /tmp/pr_prompt.txt
+          echo "- タイトルは 'feat: ...' / 'fix: ...' などの形式で、要点が分かるようにする" >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+
+          echo "## 本文要件" >> /tmp/pr_prompt.txt
+          echo "- 本文には対応した Issue 番号、変更内容の概要、テスト結果などを含める" >> /tmp/pr_prompt.txt
+          echo "- Issue への参照を必ず含める（例: Refs #123 / Closes #123）" >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+
           echo "## Issue" >> /tmp/pr_prompt.txt
           echo "#${{ github.event.issue.number }}: " >> /tmp/pr_prompt.txt
           printf '%s\n' "$ISSUE_TITLE" >> /tmp/pr_prompt.txt
           printf '%s\n' "$ISSUE_BODY" >> /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
+
           echo "## コミットメッセージ" >> /tmp/pr_prompt.txt
           cat /tmp/ai_commit_msg.txt >> /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
+
           echo "## 変更差分" >> /tmp/pr_prompt.txt
           git diff origin/main...HEAD >> /tmp/pr_prompt.txt
 
-          # いったんファイルに保存してから抽出することで、AI の余計な出力混入を防ぐ
-          cline -y -m act < /tmp/pr_prompt.txt > /tmp/ai_pr_raw.txt
+          OUT="$(cline -y -m act < /tmp/pr_prompt.txt || true)"
 
-          python .github/scripts/extract_pr_details.py /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt < /tmp/ai_pr_raw.txt
+          # Clineが余計な出力をしても、解析には使わないのでOK。
+          # ただし「ファイルを書いた」合図が一切ないケースは失敗にする
+          echo "$OUT" | grep -q "PR_FILES_WRITTEN"
+
+          # ファイル検証（空・未作成を弾く）
+          test -f /tmp/ai_pr_title.txt
+          test -s /tmp/ai_pr_title.txt
+          test -f /tmp/ai_pr_body.txt
+          test -s /tmp/ai_pr_body.txt
+
+          # タイトルは1行のみ（2行以上なら失敗）
+          if [ "$(wc -l < /tmp/ai_pr_title.txt | tr -d ' ')" -ne 1 ]; then
+            echo "PR title must be exactly 1 line." >&2
+            echo "---- /tmp/ai_pr_title.txt ----" >&2
+            cat /tmp/ai_pr_title.txt >&2
+            exit 1
+          fi
+
+          # 末尾空白だけ軽く除去（任意）
+          PR_TITLE="$(cat /tmp/ai_pr_title.txt | sed 's/[[:space:]]\+$//')"
+          printf '%s\n' "$PR_TITLE" > /tmp/ai_pr_title.txt
 
       - name: Create Pull Request
         if: steps.commit.outputs.has_changes == 'true'
