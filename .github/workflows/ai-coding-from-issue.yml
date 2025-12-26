@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Cline CLI
         run: |
-          npm install -g cline
+          npm install -g cline@1.0.7
           cline version
 
       - name: Create feature branch (human-readable & unique)
@@ -87,7 +87,7 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
-          cline auth --provider "openrouter" --apikey "$OPEN_ROUTER_API_KEY" --modelid "openai/gpt-5.1" || true
+          cline auth --provider "openrouter" --apikey "$OPEN_ROUTER_API_KEY" --modelid "google/gemini-3-flash-preview" || true
 
           echo "Issue #${{ github.event.issue.number }}: " > /tmp/prompt.txt
           printf '%s\n' "$ISSUE_TITLE" >> /tmp/prompt.txt
@@ -208,7 +208,10 @@ jobs:
           echo "## 変更差分" >> /tmp/pr_prompt.txt
           git diff origin/main...HEAD >> /tmp/pr_prompt.txt
 
-          cline -y -m act < /tmp/pr_prompt.txt | python .github/scripts/extract_pr_details.py /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt
+          # いったんファイルに保存してから抽出することで、AI の余計な出力混入を防ぐ
+          cline -y -m act < /tmp/pr_prompt.txt > /tmp/ai_pr_raw.txt
+
+          python .github/scripts/extract_pr_details.py /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt < /tmp/ai_pr_raw.txt
 
       - name: Create Pull Request
         if: steps.commit.outputs.has_changes == 'true'
