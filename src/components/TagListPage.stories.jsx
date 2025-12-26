@@ -1,4 +1,4 @@
-import React from 'react';
+
 import TagListPage from './TagListPage';
 
 export default {

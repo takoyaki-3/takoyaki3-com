@@ -1,4 +1,6 @@
-import React from 'react';
+
+
+import PropTypes from 'prop-types';
 
 const searchBarStyles = {
   marginBottom: '20px',
@@ -28,6 +30,11 @@ const SearchBar = ({ searchQuery, setSearchQuery }) => {
       />
     </div>
   );
+};
+
+SearchBar.propTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

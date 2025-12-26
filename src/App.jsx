@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import './App.css';
 import TopPage from './components/TopPage';
@@ -9,8 +9,6 @@ import ContentPage from './components/ContentPage';
 import NotFoundPage from './components/NotFoundPage';
 import logo from './assets/takoyaki3.svg';
 import githubIcon from './assets/github-mark.svg';
-
-const content_storage = 'https://takoyaki-3.github.io/takoyaki3-com-data';
 
 function App() {
   const navigate = useNavigate();

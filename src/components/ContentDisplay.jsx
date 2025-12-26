@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../utils/dateUtils';
 import '../styles/ContentPage.css';
@@ -119,6 +120,15 @@ const ContentDisplay = ({ page, pageHTML }) => {
       </div>
     </div>
   );
+};
+
+ContentDisplay.propTypes = {
+  page: PropTypes.shape({
+    created: PropTypes.string.isRequired,
+    updated: PropTypes.string.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  }).isRequired,
+  pageHTML: PropTypes.string.isRequired,
 };
 
 export default ContentDisplay;

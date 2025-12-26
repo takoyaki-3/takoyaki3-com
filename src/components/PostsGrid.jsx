@@ -1,4 +1,5 @@
-import React from 'react';
+
+import PropTypes from 'prop-types';
 import Card from './Card';
 import { style } from '../styles/styles';
 
@@ -35,6 +36,14 @@ const PostsGrid = ({ posts }) => {
     ))}
     </div>
   );
+};
+
+PostsGrid.propTypes = {
+  posts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
+  ).isRequired,
 };
 
 export default PostsGrid;

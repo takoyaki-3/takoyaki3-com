@@ -1,4 +1,4 @@
-import React from 'react';
+
 import AllPostsPage from './AllPostsPage';
 
 export default {

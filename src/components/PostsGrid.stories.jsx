@@ -1,4 +1,4 @@
-import React from 'react';
+
 import PostsGrid from './PostsGrid';
 
 // サンプル記事データ

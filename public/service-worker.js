@@ -1,7 +1,7 @@
 // service-worker.js
 
 // インストールイベント (キャッシュしない)
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   // キャッシュのセットアップをしない
   console.log("Service Worker: Installed, no caching.");
 });
