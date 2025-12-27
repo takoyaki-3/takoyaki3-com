@@ -96,18 +96,30 @@ a:hover {
 .card {
   padding: 20px;
   background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px; /* 角を少し丸める */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 影を強化 */
-  transition: box-shadow 0.3s ease;
+  border: 1px solid #eee;
+  border-radius: 12px; /* 角を少し丸める */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
+  overflow: hidden;
 }
 
 .card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* ホバー時の影を強調 */
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #059669;
+}
+
+.card h3 {
+  transition: color 0.3s ease;
+}
+
+.card:hover h3 {
+  color: #059669;
 }
 
 /* サイトのアイコンを左下に配置 */
