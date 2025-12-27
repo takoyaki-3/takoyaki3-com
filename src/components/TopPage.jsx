@@ -169,6 +169,7 @@ const TopPage = () => {
       <h2>Menu</h2>
       <div className="menu-grid">
         {[
+          { to: '/profile', title: 'プロフィール', description: 'たこやきさんの自己紹介' },
           { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
           { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
           {
