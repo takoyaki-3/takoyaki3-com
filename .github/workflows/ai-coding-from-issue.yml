@@ -46,6 +46,7 @@ jobs:
         run: |
           ISSUE_NUM="${{ github.event.issue.number }}"
           RUN_ID="${{ github.run_id }}"
+          RUN_ATTEMPT="${{ github.run_attempt }}"
 
           # タイトルをある程度安全な ASCII に変換（失敗した場合は元の文字列を使用）
           SAFE_TITLE=$(echo "$ISSUE_TITLE" | iconv -f UTF-8 -t ASCII//TRANSLIT 2>/dev/null || echo "$ISSUE_TITLE")
@@ -70,7 +71,7 @@ jobs:
             SAFE_TITLE="update"
           fi
 
-          BRANCH_NAME="ai-fix-issue-${ISSUE_NUM}-${SAFE_TITLE}-run-${RUN_ID}"
+          BRANCH_NAME="ai-fix-issue-${ISSUE_NUM}-${SAFE_TITLE}-run-${RUN_ID}-attempt-${RUN_ATTEMPT}"
 
           echo "Using branch name: $BRANCH_NAME"
 
