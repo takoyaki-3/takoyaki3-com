@@ -8,15 +8,17 @@ import { formatDate } from '../utils/dateUtils';
 const cardMinimumStyles = {
   padding: '20px',
   background: 'white',
-  border: '1px solid #ddd',
-  borderRadius: '10px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  transition: 'box-shadow 0.3s ease',
+  border: '1px solid #eee',
+  borderRadius: '12px',
+  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   position: 'relative',
   textAlign: 'left',
+  cursor: 'pointer',
+  overflow: 'hidden',
 };
 
 const cardBaseStyles = {
@@ -25,7 +27,9 @@ const cardBaseStyles = {
 };
 
 const cardHoverStyles = {
-  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+  transform: 'translateY(-4px) scale(1.02)',
+  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+  borderColor: '#059669',
 };
 
 const iconContainerStyles = {
@@ -41,11 +45,14 @@ const siteIconStyles = {
 
 const h3Styles = {
   marginBottom: '15px',
-  transition: 'text-decoration 0.3s ease',
+  transition: 'color 0.3s ease',
+  fontSize: '1.25rem',
+  fontWeight: '600',
+  lineHeight: '1.4',
 };
 
 const h3HoverStyles = {
-  textDecoration: 'underline',
+  color: '#059669',
 };
 
 const pStyles = {
