@@ -72,12 +72,6 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Setup Python
-        if: steps.pr.outputs.is_fork != 'true'
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.13'
-
       - name: Install dependencies
         if: steps.pr.outputs.is_fork != 'true'
         run: npm ci
