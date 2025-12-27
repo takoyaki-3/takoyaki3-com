@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';
@@ -8,15 +9,17 @@ import { formatDate } from '../utils/dateUtils';
 const cardMinimumStyles = {
   padding: '20px',
   background: 'white',
-  border: '1px solid #ddd',
-  borderRadius: '10px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  transition: 'box-shadow 0.3s ease',
+  border: '1px solid #eee',
+  borderRadius: '12px',
+  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   position: 'relative',
   textAlign: 'left',
+  cursor: 'pointer',
+  overflow: 'hidden',
 };
 
 const cardBaseStyles = {
@@ -25,7 +28,9 @@ const cardBaseStyles = {
 };
 
 const cardHoverStyles = {
-  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+  transform: 'translateY(-8px) scale(1.02)',
+  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+  borderColor: '#00695c',
 };
 
 const iconContainerStyles = {
@@ -41,11 +46,13 @@ const siteIconStyles = {
 
 const h3Styles = {
   marginBottom: '15px',
-  transition: 'text-decoration 0.3s ease',
+  transition: 'color 0.3s ease',
+  fontSize: '1.2rem',
+  lineHeight: '1.4',
 };
 
 const h3HoverStyles = {
-  textDecoration: 'underline',
+  color: '#00695c',
 };
 
 const pStyles = {
@@ -103,6 +110,18 @@ const Card = ({ post, type }) => {
       {cardContent}
     </a>
   );
+};
+
+Card.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    type: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    created: PropTypes.string,
+    updated: PropTypes.string,
+  }).isRequired,
+  type: PropTypes.string,
 };
 
 export default Card;
