@@ -29,7 +29,7 @@ const cardBaseStyles = {
 const cardHoverStyles = {
   transform: 'translateY(-4px) scale(1.02)',
   boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-  borderColor: '#3b82f6',
+  borderColor: '#10b981',
 };
 
 const iconContainerStyles = {
@@ -52,7 +52,7 @@ const h3Styles = {
 };
 
 const h3HoverStyles = {
-  color: '#3b82f6',
+  color: '#10b981',
 };
 
 const pStyles = {
