@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import qiitaIcon from '../assets/qiita-favicon.png';
 import zennIcon from '../assets/zenn-logo-only.svg';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PostsGrid from './PostsGrid';
 import SearchBar from './SearchBar';
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;

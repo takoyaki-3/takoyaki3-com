@@ -1,4 +1,3 @@
-import React from 'react';
 import ContentDisplay from './ContentDisplay';
 
 // Storybookの設定
