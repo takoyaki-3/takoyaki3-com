@@ -1,5 +1,3 @@
-import React from 'react';
-
 const searchBarStyles = {
   marginBottom: '20px',
   textAlign: 'center',

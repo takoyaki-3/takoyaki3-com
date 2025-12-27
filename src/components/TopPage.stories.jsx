@@ -1,4 +1,3 @@
-import React from 'react';
 import TopPage from './TopPage';
 
 export default {

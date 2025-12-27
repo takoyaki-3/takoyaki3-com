@@ -1,4 +1,3 @@
-import React from 'react';
 import "../styles/NotFoundPage.css";
 
 // 404ページコンポーネント
