@@ -237,16 +237,14 @@ jobs:
           test -f /tmp/ai_pr_body.txt
           test -s /tmp/ai_pr_body.txt
 
-          # タイトルは1行のみ（2行以上なら失敗）
-          if [ "$(wc -l < /tmp/ai_pr_title.txt | tr -d ' ')" -ne 1 ]; then
-            echo "PR title must be exactly 1 line." >&2
+          # タイトルは1行に正規化し、空なら失敗
+          PR_TITLE="$(head -n 1 /tmp/ai_pr_title.txt | tr -d '\r' | sed 's/[[:space:]]\+$//')"
+          if [ -z "$PR_TITLE" ]; then
+            echo "PR title must not be empty." >&2
             echo "---- /tmp/ai_pr_title.txt ----" >&2
             cat /tmp/ai_pr_title.txt >&2
             exit 1
           fi
-
-          # 末尾空白だけ軽く除去（任意）
-          PR_TITLE="$(cat /tmp/ai_pr_title.txt | sed 's/[[:space:]]\+$//')"
           printf '%s\n' "$PR_TITLE" > /tmp/ai_pr_title.txt
 
       - name: Create Pull Request
