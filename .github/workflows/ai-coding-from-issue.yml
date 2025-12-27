@@ -82,18 +82,85 @@ jobs:
           # 後続ステップ用に環境変数へエクスポート
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
+      - name: Mark issue as in progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            const labels = [
+              { name: 'ai-processing', color: '0E8A16', description: 'AI job is running' },
+              { name: 'ai-processed', color: '1D76DB', description: 'AI job completed' },
+              { name: 'ai-failed', color: 'B60205', description: 'AI job failed' },
+            ];
+
+            async function ensureLabel(label) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (error) {
+                if (error.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  return;
+                }
+                throw error;
+              }
+            }
+
+            async function safeRemove(labelName) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: labelName });
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+              }
+            }
+
+            for (const label of labels) {
+              await ensureLabel(label);
+            }
+
+            await safeRemove('ai-processed');
+            await safeRemove('ai-failed');
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number,
+              labels: ['ai-processing'],
+            });
+
       - name: Run Cline AI Coding
         env:
           OPEN_ROUTER_API_KEY: ${{ secrets.OPEN_ROUTER_API_KEY }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           cline auth --provider "openrouter" --apikey "$OPEN_ROUTER_API_KEY" --modelid "google/gemini-3-flash-preview" || true
+
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          COMMENTS_FILE="/tmp/issue_comments.txt"
+          gh issue view "$ISSUE_NUM" --json comments --jq '.comments[] | "### " + .author.login + "\n" + (.body // "") + "\n"' > "$COMMENTS_FILE" || true
+          if [ ! -s "$COMMENTS_FILE" ]; then
+            echo "（コメントなし）" > "$COMMENTS_FILE"
+          fi
 
           echo "Issue #${{ github.event.issue.number }}: " > /tmp/prompt.txt
           printf '%s\n' "$ISSUE_TITLE" >> /tmp/prompt.txt
           echo "" >> /tmp/prompt.txt
           printf '%s\n' "$ISSUE_BODY" >> /tmp/prompt.txt
+          echo "" >> /tmp/prompt.txt
+          echo "## 過去の議論（Issueコメント）" >> /tmp/prompt.txt
+          cat "$COMMENTS_FILE" >> /tmp/prompt.txt
           echo "" >> /tmp/prompt.txt
           echo "プロジェクトルール（.clinerules など）:" >> /tmp/prompt.txt
           echo "- 変更箇所には必要に応じてテストコード（または Storybook）を追加・更新すること" >> /tmp/prompt.txt
@@ -190,8 +257,16 @@ jobs:
         env:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           rm -f /tmp/ai_pr_title.txt /tmp/ai_pr_body.txt
+
+          ISSUE_NUM="${{ github.event.issue.number }}"
+          COMMENTS_FILE="/tmp/issue_comments.txt"
+          gh issue view "$ISSUE_NUM" --json comments --jq '.comments[] | "### " + .author.login + "\n" + (.body // "") + "\n"' > "$COMMENTS_FILE" || true
+          if [ ! -s "$COMMENTS_FILE" ]; then
+            echo "（コメントなし）" > "$COMMENTS_FILE"
+          fi
 
           echo "以下の情報をもとに、分かりやすい Pull Request のタイトルと本文を日本語で生成してください。" > /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
@@ -216,6 +291,9 @@ jobs:
           echo "#${{ github.event.issue.number }}: " >> /tmp/pr_prompt.txt
           printf '%s\n' "$ISSUE_TITLE" >> /tmp/pr_prompt.txt
           printf '%s\n' "$ISSUE_BODY" >> /tmp/pr_prompt.txt
+          echo "" >> /tmp/pr_prompt.txt
+          echo "## 過去の議論（Issueコメント）" >> /tmp/pr_prompt.txt
+          cat "$COMMENTS_FILE" >> /tmp/pr_prompt.txt
           echo "" >> /tmp/pr_prompt.txt
 
           echo "## コミットメッセージ" >> /tmp/pr_prompt.txt
@@ -312,15 +390,118 @@ jobs:
               body: process.env.COMMENT_BODY
             })
 
-      - name: Add labels to Issue
-        if: success() && steps.commit.outputs.has_changes == 'true'
+      - name: Update labels on success
+        if: success()
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['ai-processed']
-            })
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            const labels = [
+              { name: 'ai-processing', color: '0E8A16', description: 'AI job is running' },
+              { name: 'ai-processed', color: '1D76DB', description: 'AI job completed' },
+              { name: 'ai-failed', color: 'B60205', description: 'AI job failed' },
+            ];
+
+            async function ensureLabel(label) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (error) {
+                if (error.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  return;
+                }
+                throw error;
+              }
+            }
+
+            async function safeRemove(labelName) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: labelName });
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+              }
+            }
+
+            for (const label of labels) {
+              await ensureLabel(label);
+            }
+
+            await safeRemove('ai-processing');
+            await safeRemove('cline-coding');
+            await safeRemove('ai-failed');
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number,
+              labels: ['ai-processed'],
+            });
+
+      - name: Update labels on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            const labels = [
+              { name: 'ai-processing', color: '0E8A16', description: 'AI job is running' },
+              { name: 'ai-processed', color: '1D76DB', description: 'AI job completed' },
+              { name: 'ai-failed', color: 'B60205', description: 'AI job failed' },
+            ];
+
+            async function ensureLabel(label) {
+              try {
+                await github.rest.issues.getLabel({ owner, repo, name: label.name });
+              } catch (error) {
+                if (error.status === 404) {
+                  await github.rest.issues.createLabel({
+                    owner,
+                    repo,
+                    name: label.name,
+                    color: label.color,
+                    description: label.description,
+                  });
+                  return;
+                }
+                throw error;
+              }
+            }
+
+            async function safeRemove(labelName) {
+              try {
+                await github.rest.issues.removeLabel({ owner, repo, issue_number, name: labelName });
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+              }
+            }
+
+            for (const label of labels) {
+              await ensureLabel(label);
+            }
+
+            await safeRemove('ai-processing');
+            await safeRemove('cline-coding');
+            await safeRemove('ai-processed');
+            await github.rest.issues.addLabels({
+              owner,
+              repo,
+              issue_number,
+              labels: ['ai-failed'],
+            });
