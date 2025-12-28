@@ -164,6 +164,12 @@ const TopPage = () => {
           <br />
           たこやきさんです。ITと交通が大好きです。
         </p>
+        <Link to="/profile" className="profile-banner">
+          <div className="profile-banner-content">
+            <span className="profile-banner-title">プロフィールを見る</span>
+            <span className="profile-banner-arrow">→</span>
+          </div>
+        </Link>
       </div>
 
       <h2>Menu</h2>
