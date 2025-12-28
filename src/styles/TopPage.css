@@ -199,40 +199,34 @@ a:hover {
   }
 }
 
-/* プロフィールバナー */
-.profile-banner {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 12px 30px;
-  background: linear-gradient(135deg, #00695c 0%, #059669 100%);
+/* プロフィールカード */
+.profile-card {
+  background: linear-gradient(135deg, #00695c 0%, #059669 100%) !important;
   color: white !important;
-  border-radius: 30px;
-  text-decoration: none !important;
-  box-shadow: 0 4px 15px rgba(0, 105, 92, 0.3);
-  transition: all 0.3s ease;
+  border: none !important;
 }
 
-.profile-banner:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 105, 92, 0.4);
-  background: linear-gradient(135deg, #00796b 0%, #10b981 100%);
+.profile-card h3 {
+  color: white !important;
 }
 
-.profile-banner-content {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.profile-card p {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
-.profile-banner-title {
-  font-weight: bold;
-  font-size: 1.1rem;
+.profile-card:hover {
+  background: linear-gradient(135deg, #00796b 0%, #10b981 100%) !important;
+  box-shadow: 0 12px 20px rgba(0, 105, 92, 0.3) !important;
 }
 
-.profile-banner-arrow {
+.profile-card-arrow {
+  position: absolute;
+  bottom: 15px;
+  right: 20px;
+  font-size: 1.5rem;
   transition: transform 0.3s ease;
 }
 
-.profile-banner:hover .profile-banner-arrow {
+.profile-card:hover .profile-card-arrow {
   transform: translateX(5px);
 }

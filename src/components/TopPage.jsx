@@ -164,19 +164,23 @@ const TopPage = () => {
           <br />
           たこやきさんです。ITと交通が大好きです。
         </p>
-        <Link to="/profile" className="profile-banner">
-          <div className="profile-banner-content">
-            <span className="profile-banner-title">プロフィールを見る</span>
-            <span className="profile-banner-arrow">→</span>
-          </div>
-        </Link>
       </div>
 
       <h2>Menu</h2>
       <div className="menu-grid">
         {[
+          {
+            to: '/profile',
+            title: 'プロフィール',
+            description: 'たこやきさんの自己紹介。ITと交通への情熱について。',
+            isProfile: true,
+          },
           { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
-          { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
+          {
+            to: '/allPosts',
+            title: '記事一覧',
+            description: 'ZennやQiitaを含むたこやきさんの投稿一覧',
+          },
           {
             to: '/tag/作品一覧',
             title: '作品一覧',
@@ -186,9 +190,10 @@ const TopPage = () => {
           { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
         ].map((menu, index) => (
           <Link key={index} to={menu.to}>
-            <div className="card">
+            <div className={`card ${menu.isProfile ? 'profile-card' : ''}`}>
               <h3>{menu.title}</h3>
               <p>{menu.description}</p>
+              {menu.isProfile && <span className="profile-card-arrow">→</span>}
             </div>
           </Link>
         ))}
