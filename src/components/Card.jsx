@@ -63,6 +63,7 @@ const pStyles = {
 
 const Card = ({ post, type }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const cardStyles = type === 'minimum' ? cardMinimumStyles : cardBaseStyles;
 
@@ -70,45 +71,88 @@ const Card = ({ post, type }) => {
 
   const cardContent = (
     <div
-      className="card"
-      style={{ ...cardStyles, ...(isHovered ? cardHoverStyles : {}) }}
+      className={`card ${isExpanded ? 'expanded' : 'compact-card'}`}
+      style={{
+        ...cardStyles,
+        ...(isHovered ? cardHoverStyles : {}),
+        minHeight: isExpanded ? 'auto' : '60px',
+        padding: isExpanded ? '20px' : '10px 15px',
+      }}
+      onClick={(e) => {
+        if (type === 'minimum') {
+          e.preventDefault();
+          setIsExpanded(!isExpanded);
+        }
+      }}
     >
-      <div className="icon-container" style={iconContainerStyles}>
+      <div className="icon-container" style={isExpanded ? iconContainerStyles : { ...iconContainerStyles, bottom: '5px', left: '5px' }}>
         {post.type === 'qiita' && <img src={qiitaIcon} alt="Qiita" style={siteIconStyles} />}
         {post.type === 'zenn' && <img src={zennIcon} alt="Zenn" style={siteIconStyles} />}
         {post.type === 'own' && <img src={ownIcon} alt="たこやきさんのつぶやき" style={siteIconStyles} />}
       </div>
-      <h3 style={{ ...h3Styles, ...(isHovered ? h3HoverStyles : {}) }}>{post.title}</h3>
-      <p style={pStyles}>
-        作成日時：{formatDate(post.created)}
-        <br />
-        更新日時：{formatDate(post.updated)}
-      </p>
+      <h3 style={{
+        ...h3Styles,
+        ...(isHovered ? h3HoverStyles : {}),
+        fontSize: isExpanded ? '1.25rem' : '1rem',
+        margin: isExpanded ? '0 0 15px' : '0 0 0 30px',
+        whiteSpace: isExpanded ? 'normal' : 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+      }}>
+        {post.title}
+      </h3>
+      {isExpanded && (
+        <>
+          <p style={pStyles}>
+            作成日時：{formatDate(post.created)}
+            <br />
+            更新日時：{formatDate(post.updated)}
+          </p>
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            {isInternalLink ? (
+              <Link to={post.url} className="view-link">開く</Link>
+            ) : (
+              <a href={post.url} target="_blank" rel="noopener noreferrer" className="view-link">開く</a>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 
-  return isInternalLink ? (
-    <Link
-      key={post.id}
-      to={post.url}
-      style={{ textDecoration: 'none', color: 'inherit' }}
+  if (type !== 'minimum') {
+    return isInternalLink ? (
+      <Link
+        key={post.id}
+        to={post.url}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {cardContent}
+      </Link>
+    ) : (
+      <a
+        key={post.id}
+        href={post.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{ textDecoration: 'none', color: 'inherit' }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return (
+    <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {cardContent}
-    </Link>
-  ) : (
-    <a
-      key={post.id}
-      href={post.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ textDecoration: 'none', color: 'inherit' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {cardContent}
-    </a>
+    </div>
   );
 };
 

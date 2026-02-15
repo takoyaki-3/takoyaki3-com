@@ -135,56 +135,69 @@ const TopPage = () => {
     fetchRecentPosts();
   }, []);
 
+  const [expandedMenu, setExpandedMenu] = useState(null);
+
+  const menuItems = [
+    { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
+    { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
+    {
+      to: '/tag/作品一覧',
+      title: '作品一覧',
+      description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
+    },
+    { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
+    { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
+  ];
+
   return (
     <div>
-      <div className="centered-content">
-        <img
-          alt="たこやきさんのアイコン"
-          src={ownIcon}
-          className="shrink mr-2"
-          style={{ width: '80px', height: '80px' }}
-        />
-      </div>
-      <div className="centered-content">
-        {sns.map((s, i) => (
-          <a
-            key={i}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="subheading mx-3"
-          >
-            <img src={s.icon} alt={s.text} width="30px" />
-          </a>
-        ))}
-      </div>
-      <div className="text-center">
-        <p>
-          こんにちは、世界！
-          <br />
-          たこやきさんです。ITと交通が大好きです。
-        </p>
+      <div className="top-section">
+        <div className="centered-content">
+          <img
+            alt="たこやきさんのアイコン"
+            src={ownIcon}
+            className="shrink mr-2"
+            style={{ width: '60px', height: '60px' }}
+          />
+        </div>
+        <div className="centered-content">
+          {sns.map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="subheading mx-2"
+            >
+              <img src={s.icon} alt={s.text} width="24px" />
+            </a>
+          ))}
+        </div>
+        <div className="text-center intro-text">
+          <p>
+            こんにちは、世界！ たこやきさんです。ITと交通が大好きです。
+          </p>
+        </div>
       </div>
 
-      <h2>Menu</h2>
-      <div className="menu-grid">
-        {[
-          { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
-          { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
-          {
-            to: '/tag/作品一覧',
-            title: '作品一覧',
-            description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
-          },
-          { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
-          { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
-        ].map((menu, index) => (
-          <Link key={index} to={menu.to}>
-            <div className="card">
-              <h3>{menu.title}</h3>
-              <p>{menu.description}</p>
-            </div>
-          </Link>
+      <h2 className="section-title">Menu</h2>
+      <div className="menu-grid compact">
+        {menuItems.map((menu, index) => (
+          <div
+            key={index}
+            className={`card compact-card ${expandedMenu === index ? 'expanded' : ''}`}
+            onClick={() => setExpandedMenu(expandedMenu === index ? null : index)}
+          >
+            <h3>{menu.title}</h3>
+            {expandedMenu === index && (
+              <div className="card-details">
+                <p>{menu.description}</p>
+                <Link to={menu.to} className="view-link">
+                  開く
+                </Link>
+              </div>
+            )}
+          </div>
         ))}
       </div>
 

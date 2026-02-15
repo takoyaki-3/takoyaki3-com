@@ -64,14 +64,28 @@ a:hover {
 .centered-content {
   display: flex;
   justify-content: center;
+  margin-bottom: 10px;
+  gap: 10px; /* アイコン間隔を広げる */
+}
+
+.top-section {
   margin-bottom: 20px;
-  gap: 15px; /* アイコン間隔を広げる */
+}
+
+.intro-text p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  margin: 15px 0 10px;
 }
 
 /* グリッドレイアウト */
 .menu-grid, .tag-grid {
   display: grid;
-  gap: 20px; /* カード間の幅を持たせる */
+  gap: 10px; /* カード間の幅を持たせる */
 }
 
 @media (min-width: 1200px) {
@@ -108,6 +122,36 @@ a:hover {
   overflow: hidden;
 }
 
+.compact-card {
+  min-height: 50px !important;
+  padding: 10px 15px !important;
+}
+
+.card.expanded {
+  min-height: 120px !important;
+  padding: 20px !important;
+}
+
+.card-details {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.view-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 15px;
+  background-color: #00695c;
+  color: white !important;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  text-decoration: none !important;
+}
+
+.view-link:hover {
+  background-color: #004d40;
+}
+
 .card:hover {
   transform: translateY(-4px) scale(1.02);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -138,13 +182,13 @@ a:hover {
 .recent-posts {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
 .recent-posts .card {
-  min-height: 100px; /* 高さを少し小さく */
-  padding: 15px; /* パディングを調整 */
-  justify-content: flex-start;
+  min-height: 60px; /* 高さを少し小さく */
+  padding: 10px 15px; /* パディングを調整 */
+  justify-content: center;
 }
 
 .recent-posts .card h3 {
