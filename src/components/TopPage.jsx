@@ -10,6 +10,9 @@ const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TopPage = () => {
   const [recentPosts, setRecentPosts] = useState([]);
+  const [expandedMenuIndex, setExpandedMenuIndex] = useState(null);
+  const [expandedPostIndex, setExpandedPostIndex] = useState(null);
+
   const sns = [
     {
       text: 'GitHub',
@@ -136,37 +139,34 @@ const TopPage = () => {
   }, []);
 
   return (
-    <div>
-      <div className="centered-content">
+    <div className="top-page-container">
+      <div className="profile-section">
         <img
           alt="たこやきさんのアイコン"
           src={ownIcon}
-          className="shrink mr-2"
-          style={{ width: '80px', height: '80px' }}
+          className="profile-icon"
         />
-      </div>
-      <div className="centered-content">
-        {sns.map((s, i) => (
-          <a
-            key={i}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="subheading mx-3"
-          >
-            <img src={s.icon} alt={s.text} width="30px" />
-          </a>
-        ))}
-      </div>
-      <div className="text-center">
-        <p>
-          こんにちは、世界！
-          <br />
-          たこやきさんです。ITと交通が大好きです。
-        </p>
+        <div className="profile-info">
+          <div className="sns-links">
+            {sns.map((s, i) => (
+              <a
+                key={i}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sns-link"
+              >
+                <img src={s.icon} alt={s.text} />
+              </a>
+            ))}
+          </div>
+          <p className="intro-text">
+            こんにちは、世界！たこやきさんです。ITと交通が大好きです。
+          </p>
+        </div>
       </div>
 
-      <h2>Menu</h2>
+      <h2 className="section-title">Menu</h2>
       <div className="menu-grid">
         {[
           { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
@@ -179,19 +179,39 @@ const TopPage = () => {
           { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
           { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
         ].map((menu, index) => (
-          <Link key={index} to={menu.to}>
-            <div className="card">
-              <h3>{menu.title}</h3>
-              <p>{menu.description}</p>
-            </div>
-          </Link>
+          <div
+            key={index}
+            className={`menu-item ${expandedMenuIndex === index ? 'expanded' : 'compact'}`}
+            onClick={() => setExpandedMenuIndex(expandedMenuIndex === index ? null : index)}
+          >
+            <h3>{menu.title}</h3>
+            {expandedMenuIndex === index && (
+              <div className="expanded-content" onClick={(e) => e.stopPropagation()}>
+                <p>{menu.description}</p>
+                <Link to={menu.to} className="go-to-link">
+                  開く
+                </Link>
+              </div>
+            )}
+          </div>
         ))}
       </div>
 
-      <h2>Recent Posts</h2>
-      <div className="recent-posts">
-        {recentPosts.map((post) => (
-          <Card key={post.id} post={post} type={'minimum'} />
+      <h2 className="section-title">Recent Posts</h2>
+      <div className="recent-posts-grid">
+        {recentPosts.map((post, index) => (
+          <div
+            key={post.id}
+            className={`post-item ${expandedPostIndex === index ? 'expanded' : 'compact'}`}
+            onClick={() => setExpandedPostIndex(expandedPostIndex === index ? null : index)}
+          >
+            <h3>{post.title}</h3>
+            {expandedPostIndex === index && (
+              <div className="expanded-content" onClick={(e) => e.stopPropagation()}>
+                <Card post={post} type={'minimum'} />
+              </div>
+            )}
+          </div>
         ))}
       </div>
       <div>

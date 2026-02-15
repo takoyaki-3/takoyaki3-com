@@ -56,40 +56,165 @@ a:hover {
 
 /* メインコンテンツ */
 .app-content {
-  padding-top: 100px; /* ヘッダーの高さを調整 */
+  padding-top: 90px; /* ヘッダーの高さを調整 */
   color: #333;
 }
 
-/* 中央揃えのコンテンツ */
-.centered-content {
+/* プロフィールセクション */
+.profile-section {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
-  gap: 15px; /* アイコン間隔を広げる */
+  gap: 20px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* グリッドレイアウト */
-.menu-grid, .tag-grid {
-  display: grid;
-  gap: 20px; /* カード間の幅を持たせる */
+.profile-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
-@media (min-width: 1200px) {
-  .menu-grid, .tag-grid {
-    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.sns-links {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.sns-link img {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+.sns-link:hover img {
+  transform: scale(1.2);
+}
+
+.intro-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .profile-section {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .profile-info {
+    align-items: center;
+    text-align: center;
   }
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
-  .menu-grid, .tag-grid {
-    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
+.section-title {
+  font-size: 1.2rem;
+  margin: 15px 0 10px;
+  text-align: left;
+  border-left: 4px solid #00695c;
+  padding-left: 10px;
+}
+
+/* グリッドレイアウト */
+.menu-grid, .tag-grid, .recent-posts-grid {
+  display: grid;
+  gap: 10px; /* 間隔を狭く */
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .menu-grid, .tag-grid, .recent-posts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
 
 @media (max-width: 767px) {
-  .menu-grid, .tag-grid {
-    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
+  .menu-grid, .tag-grid, .recent-posts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
+}
+
+/* メニュー・ポストアイテムの共通スタイル */
+.menu-item, .post-item {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+}
+
+.menu-item.compact, .post-item.compact {
+  height: 60px;
+}
+
+.menu-item.expanded, .post-item.expanded {
+  grid-column: 1 / -1; /* 全幅に広げる */
+  min-height: 120px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 20px;
+}
+
+.menu-item h3, .post-item h3 {
+  margin: 0;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.menu-item.expanded h3, .post-item.expanded h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.menu-item:hover, .post-item:hover {
+  border-color: #059669;
+  background-color: #f0fdf4;
+}
+
+.expanded-content {
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.go-to-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 15px;
+  background-color: #00695c;
+  color: white !important;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.go-to-link:hover {
+  background-color: #004d40;
+  text-decoration: none;
 }
 
 /* メニューのカードはデフォルトの中央揃え */
@@ -106,20 +231,6 @@ a:hover {
   justify-content: space-between;
   cursor: pointer;
   overflow: hidden;
-}
-
-.card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #059669;
-}
-
-.card h3 {
-  transition: color 0.3s ease;
-}
-
-.card:hover h3 {
-  color: #059669;
 }
 
 /* サイトのアイコンを左下に配置 */
