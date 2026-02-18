@@ -10,6 +10,7 @@ const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TopPage = () => {
   const [recentPosts, setRecentPosts] = useState([]);
+  const [, setTags] = useState({});
   const sns = [
     {
       text: 'GitHub',
@@ -132,8 +133,52 @@ const TopPage = () => {
       }
     };
 
+    const fetchTags = async () => {
+      try {
+        const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
+        const tagsData = await tagsResponse.json();
+        setTags(tagsData);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+
     fetchRecentPosts();
+    fetchTags();
   }, []);
+
+  const menuItems = [
+    {
+      to: '/tagList',
+      title: 'タグ一覧',
+      description: 'Xに呟くには長い技術記事や旅行記',
+      tags: ['技術', '旅行', '日常'],
+    },
+    {
+      to: '/allPosts',
+      title: '記事一覧',
+      description: 'ZennやQiitaを含むたこやきさんの投稿一覧',
+      tags: ['Qiita', 'Zenn', 'Blog'],
+    },
+    {
+      to: '/tag/作品一覧',
+      title: '作品一覧',
+      description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
+      tags: ['OSS', 'Web制作', 'ハッカソン'],
+    },
+    {
+      to: '/tag/論文',
+      title: '論文',
+      description: '大学の卒業論文や高校時代に応募した論文',
+      tags: ['大学', '研究', '論文'],
+    },
+    {
+      to: '/tag/登壇資料',
+      title: '登壇資料',
+      description: 'イベント等で登壇した際の資料',
+      tags: ['LT', 'カンファレンス', '勉強会'],
+    },
+  ];
 
   return (
     <div>
@@ -168,21 +213,18 @@ const TopPage = () => {
 
       <h2>Menu</h2>
       <div className="menu-grid">
-        {[
-          { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
-          { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
-          {
-            to: '/tag/作品一覧',
-            title: '作品一覧',
-            description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
-          },
-          { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
-          { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
-        ].map((menu, index) => (
+        {menuItems.map((menu, index) => (
           <Link key={index} to={menu.to}>
             <div className="card">
               <h3>{menu.title}</h3>
               <p>{menu.description}</p>
+              <div className="tag-list" style={{ marginTop: '10px', textAlign: 'left' }}>
+                {menu.tags.map((tag) => (
+                  <span key={tag} style={{ ...style.tag, fontSize: '0.8rem', margin: '2px' }}>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </Link>
         ))}
