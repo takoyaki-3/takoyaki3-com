@@ -10,6 +10,7 @@ const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TopPage = () => {
   const [recentPosts, setRecentPosts] = useState([]);
+  const [tags, setTags] = useState({});
   const sns = [
     {
       text: 'GitHub',
@@ -49,6 +50,16 @@ const TopPage = () => {
   ];
 
   useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const tagsResponse = await fetch(`${content_storage}/tag_list.json`);
+        const tagsData = await tagsResponse.json();
+        setTags(tagsData);
+      } catch (error) {
+        console.error('Error fetching tags:', error);
+      }
+    };
+
     const fetchRecentPosts = async () => {
       try {
         // 自サイトの最新記事を取得
@@ -132,6 +143,7 @@ const TopPage = () => {
       }
     };
 
+    fetchTags();
     fetchRecentPosts();
   }, []);
 
@@ -169,20 +181,66 @@ const TopPage = () => {
       <h2>Menu</h2>
       <div className="menu-grid">
         {[
-          { to: '/tagList', title: 'タグ一覧', description: 'Xに呟くには長い技術記事や旅行記' },
-          { to: '/allPosts', title: '記事一覧', description: 'ZennやQiitaを含むたこやきさんの投稿一覧' },
+          {
+            to: '/tagList',
+            title: 'タグ一覧',
+            description: 'Xに呟くには長い技術記事や旅行記',
+            showTags: true,
+          },
+          {
+            to: '/allPosts',
+            title: '記事一覧',
+            description: 'ZennやQiitaを含むたこやきさんの投稿一覧',
+          },
           {
             to: '/tag/作品一覧',
             title: '作品一覧',
             description: 'チームや個人により開発している作品やこれまでの受賞作品などを紹介',
+            tag: '作品一覧',
           },
-          { to: '/tag/論文', title: '論文', description: '大学の卒業論文や高校時代に応募した論文' },
-          { to: '/tag/登壇資料', title: '登壇資料', description: 'イベント等で登壇した際の資料' },
+          {
+            to: '/tag/論文',
+            title: '論文',
+            description: '大学の卒業論文や高校時代に応募した論文',
+            tag: '論文',
+          },
+          {
+            to: '/tag/登壇資料',
+            title: '登壇資料',
+            description: 'イベント等で登壇した際の資料',
+            tag: '登壇資料',
+          },
         ].map((menu, index) => (
           <Link key={index} to={menu.to}>
             <div className="card">
               <h3>{menu.title}</h3>
               <p>{menu.description}</p>
+              {menu.showTags && (
+                <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                  {Object.keys(tags)
+                    .slice(0, 10)
+                    .map((tag) => (
+                      <span key={tag} style={{ ...style.tag, fontSize: '0.8rem' }}>
+                        #{tag}
+                      </span>
+                    ))}
+                  {Object.keys(tags).length > 10 && (
+                    <span style={{ fontSize: '0.8rem', color: '#666' }}>...</span>
+                  )}
+                </div>
+              )}
+              {menu.tag && tags[menu.tag] && (
+                <div style={{ marginTop: '10px', display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                  {tags[menu.tag].slice(0, 10).map((subTag) => (
+                    <span key={subTag} style={{ ...style.tag, fontSize: '0.8rem' }}>
+                      #{subTag}
+                    </span>
+                  ))}
+                  {tags[menu.tag].length > 10 && (
+                    <span style={{ fontSize: '0.8rem', color: '#666' }}>...</span>
+                  )}
+                </div>
+              )}
             </div>
           </Link>
         ))}
