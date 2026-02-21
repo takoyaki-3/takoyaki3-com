@@ -24,13 +24,28 @@ const TagListPage = () => {
   return (
     <div>
       <h2 style={style.heading}>タグ一覧</h2>
-      <div className="tag-list">
-        {Object.keys(tags).map((tag) => (
-          <Link style={style.tag} key={tag} to={`/tag/${tag}`}>
-            #{tag}
-          </Link>
-        ))}
-      </div>
+      <table style={style.tagTable}>
+        <thead>
+          <tr>
+            <th style={style.tagTableHeader}>タグ名</th>
+            <th style={style.tagTableHeader}>記事</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(tags).map(([tag, posts]) => (
+            <tr key={tag} style={style.tagTableRow}>
+              <td style={style.tagTableCell}>
+                <Link style={style.tag} to={`/tag/${tag}`}>
+                  #{tag}
+                </Link>
+              </td>
+              <td style={style.tagTableCell}>
+                {Array.isArray(posts) ? posts.join(', ') : posts}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

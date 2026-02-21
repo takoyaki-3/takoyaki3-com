@@ -42,6 +42,35 @@ export const style = {
     color: tagColor,
     marginRight: '5px',
   },
+  tagTable: {
+    width: '100%',
+    maxWidth: '800px',
+    margin: '20px auto',
+    borderCollapse: 'collapse',
+    backgroundColor: 'white',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+  },
+  tagTableHeader: {
+    backgroundColor: '#f8f9fa',
+    borderBottom: '2px solid #dee2e6',
+    padding: '12px 15px',
+    textAlign: 'left',
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  tagTableCell: {
+    padding: '12px 15px',
+    borderBottom: '1px solid #dee2e6',
+    textAlign: 'left',
+  },
+  tagTableRow: {
+    transition: 'background-color 0.2s',
+    '&:hover': {
+      backgroundColor: '#f1f3f5',
+    },
+  },
   more_link: {
     textAlign: 'center',
     display: 'inline-block',
