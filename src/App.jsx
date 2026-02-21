@@ -19,13 +19,13 @@ function App() {
     const tag = searchParams.get('tag');
 
     if (pageID) {
-      if (pageID === 'top') {
+      if (pageID === 'top' || pageID === 'トップ') {
         navigate('/');
-      } else if (pageID === 'tagList') {
+      } else if (pageID === 'tagList' || pageID === 'タグ一覧') {
         navigate('/tagList');
-      } else if (pageID === 'allPosts') {
+      } else if (pageID === 'allPosts' || pageID === '全記事一覧') {
         navigate('/allPosts');
-      } else if (pageID === 'tag' && tag) {
+      } else if ((pageID === 'tag' || pageID === 'タグ') && tag) {
         navigate(`/tag/${tag}`);
       } else {
         navigate(`/${pageID}`);
