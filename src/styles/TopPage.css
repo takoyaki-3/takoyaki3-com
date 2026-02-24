@@ -71,36 +71,48 @@ a:hover {
 /* グリッドレイアウト */
 .menu-grid, .tag-grid {
   display: grid;
-  gap: 20px; /* カード間の幅を持たせる */
+  gap: 15px; /* カード間の幅を持たせる */
 }
 
 @media (min-width: 1200px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
+    grid-template-columns: repeat(5, 1fr); /* 横幅1200px以上では5列表示 */
   }
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
+@media (min-width: 992px) and (max-width: 1199px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
+    grid-template-columns: repeat(4, 1fr); /* 横幅992pxから1199pxでは4列表示 */
   }
 }
 
-@media (max-width: 767px) {
+@media (min-width: 768px) and (max-width: 991px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
+    grid-template-columns: repeat(3, 1fr); /* 横幅768pxから991pxでは3列表示 */
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .menu-grid, .tag-grid {
+    grid-template-columns: repeat(2, 1fr); /* 横幅480pxから767pxでは2列表示 */
+  }
+}
+
+@media (max-width: 479px) {
+  .menu-grid, .tag-grid {
+    grid-template-columns: 1fr; /* 横幅479px以下では1列表示 */
   }
 }
 
 /* メニューのカードはデフォルトの中央揃え */
 .card {
-  padding: 20px;
+  padding: 15px;
   background: white;
   border: 1px solid #eee;
   border-radius: 12px; /* 角を少し丸める */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 120px;
+  min-height: 100px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -164,8 +176,8 @@ a:hover {
 /* カード全体のスタイル調整 */
 .card {
   position: relative;
-  padding-top: 40px; /* 日付が内容と重ならないように上部に余白を追加 */
-  min-height: 150px; /* カードの最小高さを設定 */
+  padding-top: 15px; /* 余白を削減 */
+  min-height: 80px; /* カードの最小高さを設定 */
   display: flex;
   flex-direction: column;
   justify-content: space-between; /* 上部と下部に要素を配置 */
@@ -173,7 +185,13 @@ a:hover {
 
 /* タイトルの下に余白を追加 */
 .card h3 {
-  margin-bottom: 15px; /* タイトルと次の要素の間に余白を追加 */
+  margin-bottom: 5px; /* タイトルと次の要素の間に余白を追加 */
+  font-size: 1rem; /* フォントサイズを小さく */
+}
+
+.card p {
+  font-size: 0.8rem; /* 説明文のフォントサイズを小さく */
+  margin: 0;
 }
 
 

@@ -6,7 +6,7 @@ import ownIcon from '../assets/takoyaki3.svg';
 import { formatDate } from '../utils/dateUtils';
 
 const cardMinimumStyles = {
-  padding: '20px',
+  padding: '15px',
   background: 'white',
   border: '1px solid #eee',
   borderRadius: '12px',
@@ -19,11 +19,12 @@ const cardMinimumStyles = {
   textAlign: 'left',
   cursor: 'pointer',
   overflow: 'hidden',
+  minHeight: '100px',
 };
 
 const cardBaseStyles = {
   ...cardMinimumStyles,
-  minHeight: '200px',
+  minHeight: '150px',
 };
 
 const cardHoverStyles = {
@@ -44,9 +45,9 @@ const siteIconStyles = {
 };
 
 const h3Styles = {
-  marginBottom: '15px',
+  marginBottom: '10px',
   transition: 'color 0.3s ease',
-  fontSize: '1.25rem',
+  fontSize: '1rem',
   fontWeight: '600',
   lineHeight: '1.4',
 };
@@ -56,9 +57,10 @@ const h3HoverStyles = {
 };
 
 const pStyles = {
-  fontSize: '0.9rem',
+  fontSize: '0.8rem',
   color: '#555',
   textAlign: 'right',
+  margin: 0,
 };
 
 const Card = ({ post, type }) => {
