@@ -6,10 +6,10 @@ import ownIcon from '../assets/takoyaki3.svg';
 import { formatDate } from '../utils/dateUtils';
 
 const cardMinimumStyles = {
-  padding: '20px',
+  padding: '10px',
   background: 'white',
   border: '1px solid #eee',
-  borderRadius: '12px',
+  borderRadius: '8px',
   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   display: 'flex',
@@ -19,11 +19,12 @@ const cardMinimumStyles = {
   textAlign: 'left',
   cursor: 'pointer',
   overflow: 'hidden',
+  minHeight: '80px',
 };
 
 const cardBaseStyles = {
   ...cardMinimumStyles,
-  minHeight: '200px',
+  minHeight: '120px',
 };
 
 const cardHoverStyles = {
@@ -34,19 +35,19 @@ const cardHoverStyles = {
 
 const iconContainerStyles = {
   position: 'absolute',
-  bottom: '10px',
-  left: '10px',
+  bottom: '5px',
+  left: '5px',
 };
 
 const siteIconStyles = {
-  width: '24px',
-  height: '24px',
+  width: '16px',
+  height: '16px',
 };
 
 const h3Styles = {
-  marginBottom: '15px',
+  marginBottom: '5px',
   transition: 'color 0.3s ease',
-  fontSize: '1.25rem',
+  fontSize: '0.9rem',
   fontWeight: '600',
   lineHeight: '1.4',
 };
@@ -56,7 +57,7 @@ const h3HoverStyles = {
 };
 
 const pStyles = {
-  fontSize: '0.9rem',
+  fontSize: '0.7rem',
   color: '#555',
   textAlign: 'right',
 };

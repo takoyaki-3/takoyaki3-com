@@ -71,39 +71,39 @@ a:hover {
 /* グリッドレイアウト */
 .menu-grid, .tag-grid {
   display: grid;
-  gap: 20px; /* カード間の幅を持たせる */
+  gap: 10px; /* カード間の幅を狭める */
 }
 
 @media (min-width: 1200px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: repeat(3, 1fr); /* 横幅1200px以上では3列表示 */
+    grid-template-columns: repeat(5, 1fr); /* 横幅1200px以上では5列表示 */
   }
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: repeat(2, 1fr); /* 横幅768pxから1199pxでは2列表示 */
+    grid-template-columns: repeat(3, 1fr); /* 横幅768pxから1199pxでは3列表示 */
   }
 }
 
 @media (max-width: 767px) {
   .menu-grid, .tag-grid {
-    grid-template-columns: 1fr; /* 横幅767px以下では1列表示 */
+    grid-template-columns: repeat(2, 1fr); /* 横幅767px以下では2列表示 */
   }
 }
 
 /* メニューのカードはデフォルトの中央揃え */
 .card {
-  padding: 20px;
+  padding: 10px; /* パディングを小さく */
   background: white;
   border: 1px solid #eee;
-  border-radius: 12px; /* 角を少し丸める */
+  border-radius: 8px; /* 角の丸みを少し抑える */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 120px;
+  min-height: 80px; /* 最小高さを小さく */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center; /* 中央揃えに変更 */
   cursor: pointer;
   overflow: hidden;
 }
@@ -116,6 +116,13 @@ a:hover {
 
 .card h3 {
   transition: color 0.3s ease;
+  font-size: 1rem; /* フォントサイズを小さく */
+  margin: 0;
+}
+
+.card p {
+  font-size: 0.75rem; /* 説明文のフォントサイズを小さく */
+  margin: 5px 0 0;
 }
 
 .card:hover h3 {
@@ -125,55 +132,57 @@ a:hover {
 /* サイトのアイコンを左下に配置 */
 .icon-container {
   position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 5px;
+  left: 5px;
 }
 
 .site-icon {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
 }
 
 /* Recent Posts のカード */
 .recent-posts {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 横並びに変更 */
+  gap: 10px;
+}
+
+@media (max-width: 767px) {
+  .recent-posts {
+    grid-template-columns: 1fr; /* スマホでは1列 */
+  }
 }
 
 .recent-posts .card {
-  min-height: 100px; /* 高さを少し小さく */
-  padding: 15px; /* パディングを調整 */
+  min-height: 80px; /* 高さを小さく */
+  padding: 10px; /* パディングを調整 */
   justify-content: flex-start;
+  padding-top: 10px; /* 上部の余白をリセット */
 }
 
 .recent-posts .card h3 {
   text-align: left;
-  margin: 0 0 10px; /* 下に少し余白を追加 */
-  font-size: 1.2rem;
-  color: #000; /* タイトルの色を黒に設定 */
+  margin: 0 0 5px;
+  font-size: 0.9rem;
+  color: #000;
 }
 
 .recent-posts .card p {
   text-align: right;
   margin-top: auto;
-  font-size: 0.9rem;
-  color: #000; /* 日付の色を薄くして控えめに */
+  font-size: 0.7rem;
+  color: #666;
 }
 
 /* カード全体のスタイル調整 */
 .card {
   position: relative;
-  padding-top: 40px; /* 日付が内容と重ならないように上部に余白を追加 */
-  min-height: 150px; /* カードの最小高さを設定 */
+  padding: 10px;
+  min-height: 80px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 上部と下部に要素を配置 */
-}
-
-/* タイトルの下に余白を追加 */
-.card h3 {
-  margin-bottom: 15px; /* タイトルと次の要素の間に余白を追加 */
+  justify-content: center;
 }
 
 
