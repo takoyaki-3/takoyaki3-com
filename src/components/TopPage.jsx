@@ -4,12 +4,16 @@ import { Timeline } from 'react-twitter-widgets';
 import ownIcon from '../assets/takoyaki3.svg';
 import '../styles/TopPage.css';
 import Card from './Card';
+import SearchBar from './SearchBar';
+import PostsGrid from './PostsGrid';
 import { style } from '../styles/styles';
 
 const content_storage = import.meta.env.VITE_CONTENT_STORAGE;
 
 const TopPage = () => {
+  const [allArticles, setAllArticles] = useState([]);
   const [recentPosts, setRecentPosts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const sns = [
     {
       text: 'GitHub',
@@ -126,6 +130,7 @@ const TopPage = () => {
         const allArticles = [...ownArticles, ...qiitaArticles, ...zennArticles];
         allArticles.sort((a, b) => new Date(b.created) - new Date(a.created));
 
+        setAllArticles(allArticles);
         setRecentPosts(allArticles.slice(0, 3));
       } catch (error) {
         console.error('Error fetching recent posts:', error);
@@ -135,35 +140,68 @@ const TopPage = () => {
     fetchRecentPosts();
   }, []);
 
+  const filteredArticles = allArticles.filter((post) =>
+    post.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
-      <div className="centered-content">
-        <img
-          alt="たこやきさんのアイコン"
-          src={ownIcon}
-          className="shrink mr-2"
-          style={{ width: '80px', height: '80px' }}
-        />
+      <div className="profile-section">
+        <div className="profile-header">
+          <img alt="たこやきさんのアイコン" src={ownIcon} className="profile-icon" />
+          <h1 className="profile-name">たこやきさん (takoyaki3)</h1>
+        </div>
+        <div className="profile-bio">
+          <p>
+            こんにちは、世界！
+            <br />
+            ITと交通が大好きで、ソフトウェアエンジニアとして活動しています。
+            <br />
+            Web技術からインフラ、データ分析まで幅広く興味を持っています。
+          </p>
+        </div>
+        <div className="centered-content">
+          {sns.map((s, i) => (
+            <a
+              key={i}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="subheading mx-3"
+            >
+              <img src={s.icon} alt={s.text} width="30px" />
+            </a>
+          ))}
+        </div>
+        <div className="profile-details">
+          <div className="profile-detail-item">
+            <strong>Interests</strong>
+            Web Development, Public Transport, Data Science
+          </div>
+          <div className="profile-detail-item">
+            <strong>Location</strong>
+            Tokyo, Japan
+          </div>
+          <div className="profile-detail-item">
+            <strong>Skills</strong>
+            React, Node.js, Python, Cloud Infrastructure
+          </div>
+        </div>
       </div>
-      <div className="centered-content">
-        {sns.map((s, i) => (
-          <a
-            key={i}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="subheading mx-3"
-          >
-            <img src={s.icon} alt={s.text} width="30px" />
-          </a>
-        ))}
-      </div>
-      <div className="text-center">
-        <p>
-          こんにちは、世界！
-          <br />
-          たこやきさんです。ITと交通が大好きです。
-        </p>
+
+      <div className="search-section">
+        <h2>Search Articles</h2>
+        <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        {searchQuery && (
+          <div style={{ marginTop: '20px' }}>
+            <h3>Search Results for "{searchQuery}"</h3>
+            {filteredArticles.length > 0 ? (
+              <PostsGrid posts={filteredArticles} />
+            ) : (
+              <p>No articles found.</p>
+            )}
+          </div>
+        )}
       </div>
 
       <h2>Menu</h2>
